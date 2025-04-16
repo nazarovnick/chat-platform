@@ -1,0 +1,14 @@
+# Binaries
+**/main
+**/*.exe
+**/*.out
+
+# Logs
+**/*.log
+
+# IDE
+**/.idea/
+**/.vscode/
+
+# System
+.DS_Store
