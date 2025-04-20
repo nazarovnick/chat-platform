@@ -1,7 +1,7 @@
 # 💬 Chat Service
 
 <div style="text-align: left;">
-  <img src="./docs/assets/chat-ms.png" alt="chat-platform architecture" width="800"/>
+  <img src="./docs/assets/chat-ms-resized.png" alt="chat-platform architecture" width="800"/>
 </div>
 
 Сервис для обмена сообщениями между пользователями.

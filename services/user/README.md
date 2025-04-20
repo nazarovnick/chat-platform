@@ -1,7 +1,7 @@
 # 👤 User Service
 
 <div style="text-align: left;">
-  <img src="./docs/assets/user-ms.png" alt="chat-platform architecture" width="800"/>
+  <img src="./docs/assets/user-ms-resized.png" alt="chat-platform architecture" width="800"/>
 </div>
 
 

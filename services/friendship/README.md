@@ -1,7 +1,7 @@
 # 🤝 Friendship Service
 
 <div style="text-align: left;">
-  <img src="./docs/assets/friendship-ms.png" alt="chat-platform architecture" width="800"/>
+  <img src="./docs/assets/friendship-ms-resized.png" alt="chat-platform architecture" width="800"/>
 </div>
 
 

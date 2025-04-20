@@ -1,7 +1,7 @@
 # 🧩 chat-platform — микросервисная платформа для общения
 
 <div style="text-align: left;">
-  <img src="./docs/assets/chat-platform-vikings.png" alt="chat-platform architecture" width="800"/>
+  <img src="./docs/assets/chat-platform-vikings-resized.png" alt="chat-platform architecture" width="800"/>
 </div>
 
 ## 📚 Оглавление
