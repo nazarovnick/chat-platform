@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-green
+  labels:
+    app: chat-green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chat
+      version: green
+  template:
+    metadata:
+      labels:
+        app: chat
+        version: green
+    spec:
+      containers:
+        - name: chat
+          image: chat:green
+          ports:
+            - containerPort: 8080

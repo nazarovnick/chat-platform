@@ -42,6 +42,11 @@ docker-env:
 		echo "  minikube docker-env | Invoke-Expression"; \
 	fi
 
+
+# =======================================
+# AUTH SERVICE K8S COMMANDS
+# =======================================
+
 # Build the auth:blue image directly into Minikube's Docker
 build-auth-blue:
 	docker build -t auth:blue -f ./services/auth/docker/multi.Dockerfile ./services/auth
@@ -63,5 +68,32 @@ auth-switch-blue:
 # Switch traffic to the green version
 auth-switch-green:
 	kubectl patch service auth-service -p '{"spec": {"selector": {"app": "auth", "version": "green"}}}'
+
+
+# =======================================
+# CHAT SERVICE K8S COMMANDS
+# =======================================
+
+# Build the auth:blue image directly into Minikube's Docker
+build-chat-blue:
+	docker build -t chat:blue -f ./services/auth/docker/multi.Dockerfile ./services/chat
+
+# Build the auth:green image directly into Minikube's Docker
+build-chat-green:
+	docker build -t chat:green -f ./services/auth/docker/multi.Dockerfile ./services/chat
+
+# Deploy blue and green versions of the auth service along with its Kubernetes service
+chat-deploy:
+	kubectl apply -f k8s/chat/blue-deployment.yaml
+	kubectl apply -f k8s/chat/green-deployment.yaml
+	kubectl apply -f k8s/chat/service.yaml
+
+# Switch traffic to the blue version
+chat-switch-blue:
+	kubectl patch service chat-service -p '{"spec": {"selector": {"app": "chat", "version": "blue"}}}'
+
+# Switch traffic to the green version
+chat-switch-green:
+	kubectl patch service chat-service -p '{"spec": {"selector": {"app": "chat", "version": "green"}}}'
 
 
