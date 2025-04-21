@@ -74,15 +74,15 @@ auth-switch-green:
 # CHAT SERVICE K8S COMMANDS
 # =======================================
 
-# Build the auth:blue image directly into Minikube's Docker
+# Build the chat:blue image directly into Minikube's Docker
 build-chat-blue:
-	docker build -t chat:blue -f ./services/auth/docker/multi.Dockerfile ./services/chat
+	docker build -t chat:blue -f ./services/chat/docker/multi.Dockerfile ./services/chat
 
-# Build the auth:green image directly into Minikube's Docker
+# Build the chat:green image directly into Minikube's Docker
 build-chat-green:
-	docker build -t chat:green -f ./services/auth/docker/multi.Dockerfile ./services/chat
+	docker build -t chat:green -f ./services/chat/docker/multi.Dockerfile ./services/chat
 
-# Deploy blue and green versions of the auth service along with its Kubernetes service
+# Deploy blue and green versions of the chat service along with its Kubernetes service
 chat-deploy:
 	kubectl apply -f k8s/chat/blue-deployment.yaml
 	kubectl apply -f k8s/chat/green-deployment.yaml
@@ -96,4 +96,30 @@ chat-switch-blue:
 chat-switch-green:
 	kubectl patch service chat-service -p '{"spec": {"selector": {"app": "chat", "version": "green"}}}'
 
+
+# =======================================
+# FRIENDSHIP SERVICE K8S COMMANDS
+# =======================================
+
+# Build the friendship:blue image directly into Minikube's Docker
+build-friendship-blue:
+	docker build -t friendship:blue -f ./services/friendship/docker/multi.Dockerfile ./services/friendship
+
+# Build the friendship:green image directly into Minikube's Docker
+build-friendship-green:
+	docker build -t friendship:green -f ./services/friendship/docker/multi.Dockerfile ./services/friendship
+
+# Deploy blue and green versions of the auth service along with its Kubernetes service
+friendship-deploy:
+	kubectl apply -f k8s/friendship/blue-deployment.yaml
+	kubectl apply -f k8s/friendship/green-deployment.yaml
+	kubectl apply -f k8s/friendship/service.yaml
+
+# Switch traffic to the blue version
+friendship-switch-blue:
+	kubectl patch service friendship-service -p '{"spec": {"selector": {"app": "friendship", "version": "blue"}}}'
+
+# Switch traffic to the green version
+friendship-switch-green:
+	kubectl patch service friendship-service -p '{"spec": {"selector": {"app": "friendship", "version": "green"}}}'
 
