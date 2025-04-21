@@ -30,3 +30,38 @@ restart:
 # Stop containers without removing them
 stop:
 	docker-compose stop
+
+
+docker-env:
+	@echo "Detecting OS and setting Docker env for Minikube..."
+	@if [ "$$(uname -s)" = "Linux" ] || [ "$$(uname -s)" = "Darwin" ]; then \
+		echo "Running on Linux/macOS"; \
+		eval $$(minikube docker-env); \
+	else \
+		echo "You're on Windows. Please run this manually in PowerShell:"; \
+		echo "  minikube docker-env | Invoke-Expression"; \
+	fi
+
+# Build the auth:blue image directly into Minikube's Docker
+build-auth-blue:
+	docker build -t auth:blue -f ./services/auth/docker/multi.Dockerfile ./services/auth
+
+# Build the auth:green image directly into Minikube's Docker
+build-auth-green:
+	docker build -t auth:green -f ./services/auth/docker/multi.Dockerfile ./services/auth
+
+# Deploy blue and green versions of the auth service along with its Kubernetes service
+auth-deploy:
+	kubectl apply -f k8s/auth/blue-deployment.yaml
+	kubectl apply -f k8s/auth/green-deployment.yaml
+	kubectl apply -f k8s/auth/service.yaml
+
+# Switch traffic to the blue version
+auth-switch-blue:
+	kubectl patch service auth-service -p '{"spec": {"selector": {"app": "auth", "version": "blue"}}}'
+
+# Switch traffic to the green version
+auth-switch-green:
+	kubectl patch service auth-service -p '{"spec": {"selector": {"app": "auth", "version": "green"}}}'
+
+
