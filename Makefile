@@ -109,7 +109,7 @@ build-friendship-blue:
 build-friendship-green:
 	docker build -t friendship:green -f ./services/friendship/docker/multi.Dockerfile ./services/friendship
 
-# Deploy blue and green versions of the auth service along with its Kubernetes service
+# Deploy blue and green versions of the friendship service along with its Kubernetes service
 friendship-deploy:
 	kubectl apply -f k8s/friendship/blue-deployment.yaml
 	kubectl apply -f k8s/friendship/green-deployment.yaml
@@ -123,3 +123,29 @@ friendship-switch-blue:
 friendship-switch-green:
 	kubectl patch service friendship-service -p '{"spec": {"selector": {"app": "friendship", "version": "green"}}}'
 
+
+# =======================================
+# USER SERVICE K8S COMMANDS
+# =======================================
+
+# Build the user:blue image directly into Minikube's Docker
+build-user-blue:
+	docker build -t user:blue -f ./services/user/docker/multi.Dockerfile ./services/user
+
+# Build the user:green image directly into Minikube's Docker
+build-user-green:
+	docker build -t user:green -f ./services/user/docker/multi.Dockerfile ./services/user
+
+# Deploy blue and green versions of the user service along with its Kubernetes service
+user-deploy:
+	kubectl apply -f k8s/user/blue-deployment.yaml
+	kubectl apply -f k8s/user/green-deployment.yaml
+	kubectl apply -f k8s/user/service.yaml
+
+# Switch traffic to the blue version
+user-switch-blue:
+	kubectl patch service user-service -p '{"spec": {"selector": {"app": "user", "version": "blue"}}}'
+
+# Switch traffic to the green version
+user-switch-green:
+	kubectl patch service user-service -p '{"spec": {"selector": {"app": "user", "version": "green"}}}'
