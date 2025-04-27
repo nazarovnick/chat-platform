@@ -15,6 +15,15 @@ func RegisterHealthRoutes(router fiber.Router) {
 
 // LivenessHandler handles the liveness probe request.
 // It returns a 200 OK response with a status indicating the service is alive.
+//
+// @Summary      Kubernetes liveness probe
+// @Description  Endpoint for checking if the application is live
+// @Tags         health
+// @Accept       json
+// @Produce      json
+// @Success      200  {object} dto.HealthResponse
+// @Failure      500  {object}  dto.HTTPError
+// @Router       /healthz/liveness [get]
 func LivenessHandler(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(dto.HealthResponse{
 		Status: "alive"},
@@ -23,6 +32,15 @@ func LivenessHandler(c *fiber.Ctx) error {
 
 // ReadinessHandler handles the readiness probe request.
 // It returns a 200 OK response with a status indicating the service is ready.
+//
+// @Summary      Kubernetes readiness probe
+// @Description  Endpoint for checking if the application is ready
+// @Tags         health
+// @Accept       json
+// @Produce      json
+// @Success      200  {object} dto.HealthResponse
+// @Failure      500  {object}  dto.HTTPError
+// @Router       /healthz/readiness [get]
 func ReadinessHandler(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(dto.HealthResponse{
 		Status: "ready"},

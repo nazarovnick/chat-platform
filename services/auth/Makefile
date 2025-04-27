@@ -6,3 +6,6 @@ build-simple:
 
 build-multi:
 	docker build . -f $(DOCKER_DIR)/multi.Dockerfile -t $(SERVICE_NAME):multi
+
+update-swagger-docs:
+	swag init -g cmd/server/main.go -o docs/swagger
