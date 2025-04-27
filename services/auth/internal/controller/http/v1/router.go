@@ -6,4 +6,5 @@ import "github.com/gofiber/fiber/v2"
 // on the provided Fiber router.
 func RegisterRoutes(router fiber.Router) {
 	RegisterHealthRoutes(router)
+	RegisterAuthRoutes(router)
 }
