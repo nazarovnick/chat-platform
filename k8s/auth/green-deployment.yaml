@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth
+      version: green
+  template:
+    metadata:
+      labels:
+        app: auth
+        version: green
+    spec:
+      containers:
+        - name: auth
+          image: auth:green
+          ports:
+            - containerPort: 8080

@@ -1,0 +1,25 @@
+services:
+  auth:
+    build:
+      context: ./services/auth
+      dockerfile: docker/multi.Dockerfile
+    ports:
+      - 8090:8080
+  chat:
+    build:
+      context: ./services/chat
+      dockerfile: docker/multi.Dockerfile
+    ports:
+      - 8091:8080
+  friendship:
+    build:
+      context: ./services/friendship
+      dockerfile: docker/multi.Dockerfile
+    ports:
+      - 8092:8080
+  user:
+    build:
+      context: ./services/user
+      dockerfile: docker/multi.Dockerfile
+    ports:
+      - 8093:8080

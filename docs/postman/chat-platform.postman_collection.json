@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "fd87f0fd-5dfd-4126-9e1c-5d1e6b1f5550",
+		"name": "chat-platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26351104"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "api/v1/healthz/liveness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_auth}}/api/v1/healthz/liveness",
+							"host": [
+								"{{domain_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"liveness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/v1/healthz/readiness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_auth}}/api/v1/healthz/readiness",
+							"host": [
+								"{{domain_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"readiness"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chat",
+			"item": [
+				{
+					"name": "api/v1/healthz/liveness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_chat}}/api/v1/healthz/liveness",
+							"host": [
+								"{{domain_chat}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"liveness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/v1/healthz/readiness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_chat}}/api/v1/healthz/readiness",
+							"host": [
+								"{{domain_chat}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"readiness"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "friendship",
+			"item": [
+				{
+					"name": "api/v1/healthz/liveness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_friendship}}/api/v1/healthz/liveness",
+							"host": [
+								"{{domain_friendship}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"liveness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/v1/healthz/readiness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_friendship}}/api/v1/healthz/readiness",
+							"host": [
+								"{{domain_friendship}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"readiness"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "api/v1/healthz/liveness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_user}}/api/v1/healthz/liveness",
+							"host": [
+								"{{domain_user}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"liveness"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api/v1/healthz/readiness",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{domain_user}}/api/v1/healthz/readiness",
+							"host": [
+								"{{domain_user}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"healthz",
+								"readiness"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "domain_auth",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "domain_friendship",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "domain_chat",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "domain_user",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

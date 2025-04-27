@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: friendship-blue
+  labels:
+    app: friendship-blue
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: friendship
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: friendship
+        version: blue
+    spec:
+      containers:
+        - name: friendship-container
+          image: friendship:blue
+          ports:
+            - containerPort: 8080

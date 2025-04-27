@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-green
+  labels:
+    app: user-green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user
+      version: green
+  template:
+    metadata:
+      labels:
+        app: user
+        version: green
+    spec:
+      containers:
+        - name: user
+          image: user:green
+          ports:
+            - containerPort: 8080
