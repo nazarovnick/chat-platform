@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.chat.grpc;
+
+option go_package = "pkg/api/grpc/chat;chat";
+
+// Message represents a chat message.
+message Message {
+  string id = 1; // Unique identifier of the message.
+  string chat_id = 2; // Chat ID where the message was sent.
+  string user_id = 3; // User ID who sent the message.
+  string content = 4; // Content of the message.
+  int64 timestamp = 5; // Timestamp when the message was sent (Unix time).
+}
+
+// Request to send a new message.
+message SendMessageRequest {
+  string chat_id = 1; // ID of the chat to send the message to.
+  string user_id = 2; // ID of the user sending the message.
+  string content = 3; // Content of the message.
+}
+
+// Response after a message is successfully sent.
+message SendMessageResponse {
+  string message_id = 1; // ID of the newly created message.
+}
+
+// Request to get all messages for a chat.
+message GetMessagesRequest {
+  string chat_id = 1; // ID of the chat to retrieve messages from.
+}
+
+// Response with a list of messages.
+message GetMessagesResponse {
+  repeated Message messages = 1;  // List of messages.
+}

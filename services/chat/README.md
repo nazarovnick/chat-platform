@@ -14,3 +14,11 @@
 
 Реализация в процессе подготовки.  
 Скоро начнёт принимать первые реплики.
+
+## Требования
+Требуется установленный Go 1.24+
+Требуется установить [protoc](https://protobuf.dev/installation/)
+
+```bash
+sudo apt install -y protobuf-compiler
+```

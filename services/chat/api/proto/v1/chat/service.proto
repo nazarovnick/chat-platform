@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.chat.grpc;
+
+import "messages.proto";
+
+option go_package = "pkg/api/grpc/chat;chat";
+
+service ChatService {
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+}
