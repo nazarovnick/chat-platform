@@ -1,9 +1,10 @@
-module github.com/nazarovnick/chat-platform/services/auth
+module github.com/nazarovnick/chat-platform/services/chat
 
 go 1.24.0
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/nazarovnick/chat-platform/services/auth v0.0.0-20250427094724-8d9144f0dc17
 	google.golang.org/grpc v1.72.0
 	google.golang.org/protobuf v1.36.6
 )

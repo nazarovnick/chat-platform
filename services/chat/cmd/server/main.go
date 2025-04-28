@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http"
+	"github.com/nazarovnick/chat-platform/services/chat/internal/controller/http"
 	"log"
 )
 

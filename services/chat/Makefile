@@ -18,7 +18,7 @@ PROTOC = PATH="$$PATH:$(LOCAL_BIN)" protoc
 PROTO_PATH := $(CURDIR)/api/proto/$(API_VERSION)/$(SERVICE_NAME)
 
 # Path where the generated .pb.go files will be placed
-PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc
+PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 
 # Install the required protoc plugins
 .bin-deps: export GOBIN := $(LOCAL_BIN)
