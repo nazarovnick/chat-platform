@@ -13,7 +13,7 @@ func RegisterSwaggerRoutes(router *mux.Router) {
 
 	// Swagger UI
 	swagger.PathPrefix("/").Handler(
-		http.StripPrefix("/swagger/", http.FileServer(http.Dir("./web/static/swagger-ui-5.21.0/dist/"))),
+		http.StripPrefix("/swagger/", http.FileServer(http.Dir("./assets/static/swagger-ui-5.21.0/dist/"))),
 	)
 }
 
