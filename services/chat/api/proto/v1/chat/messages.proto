@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package github.com.nazarovnick.chat_platform.chat;
 
-option go_package = "pkg/api/grpc/chat;chat";
-
+import "buf/validate/validate.proto";
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
-import "buf/validate/validate.proto";
+
+option go_package = "pkg/api/grpc/chat;chat";
 
 // Message represents a chat message.
 message Message {

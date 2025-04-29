@@ -38,6 +38,12 @@ PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 	go install github.com/bufbuild/buf/cmd/buf@v1.32.2
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+	go install github.com/yoheimuta/protolint/cmd/protolint@latest
+
+lint: .proto-lint
+
+.proto-lint:
+	$(LOCAL_BIN)/protolint ./api/proto/$(API_VERSION)/$(SERVICE_NAME)
 
 # Generate .go files from .proto files using protoc
 .protoc-generate:
