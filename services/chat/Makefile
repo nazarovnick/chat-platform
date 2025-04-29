@@ -1,3 +1,5 @@
+include vendor.proto.mk
+
 # Name of the service (used as Docker image tag)
 SERVICE_NAME=chat
 
@@ -17,6 +19,9 @@ PROTOC = PATH="$$PATH:$(LOCAL_BIN)" protoc
 # Path to the protobuf files
 PROTO_PATH := $(CURDIR)/api/proto/$(API_VERSION)/$(SERVICE_NAME)
 
+# Путь до завендореных protobuf файлов
+VENDOR_PROTO_PATH := $(CURDIR)/vendor.protobuf
+
 # Path where the generated .pb.go files will be placed
 PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 
@@ -27,13 +32,16 @@ PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install github.com/bufbuild/buf/cmd/buf@v1.32.2
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
 
 # Generate .go files from .proto files using protoc
 .protoc-generate:
 	mkdir -p $(PKG_PROTO_PATH)
-	$(PROTOC) --proto_path=$(PROTO_PATH) \
+	$(PROTOC) -I $(VENDOR_PROTO_PATH) --proto_path=$(PROTO_PATH) \
 	--go_out=$(PKG_PROTO_PATH) --go_opt paths=source_relative \
 	--go-grpc_out=$(PKG_PROTO_PATH) --go-grpc_opt paths=source_relative \
+	--grpc-gateway_out=$(PKG_PROTO_PATH) --grpc-gateway_opt paths=source_relative --grpc-gateway_opt generate_unbound_methods=true \
 	$(PROTO_PATH)/service.proto \
 	$(PROTO_PATH)/messages.proto
 
@@ -62,5 +70,7 @@ build-multi:
 	.bin-deps \
 	.protoc-generate \
 	.tidy \
+	.vendor-protovalidate \
+	vendor \
 	generate \
 	build

@@ -4,30 +4,92 @@ package github.com.nazarovnick.chat_platform.chat.grpc;
 
 option go_package = "pkg/api/grpc/chat;chat";
 
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "buf/validate/validate.proto";
+
 // Message represents a chat message.
 message Message {
-  string id = 1; // Unique identifier of the message.
-  string chat_id = 2; // Chat ID where the message was sent.
-  string user_id = 3; // User ID who sent the message.
-  string content = 4; // Content of the message.
-  int64 timestamp = 5; // Timestamp when the message was sent (Unix time).
+  // Unique identifier of the message.
+  uint64 id = 1 [
+    json_name = "id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // Chat ID where the message was sent.
+  int64 chat_id = 2 [
+    json_name = "chat_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // User ID who sent the message.
+  int64 user_id = 3 [
+    json_name = "user_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // Content of the message.
+  string content = 4 [
+    json_name = "content",
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 2000,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // Timestamp when the message was sent (Unix time).
+  int64 timestamp = 5 [
+    json_name = "timestamp",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Request to send a new message.
 message SendMessageRequest {
-  string chat_id = 1; // ID of the chat to send the message to.
-  string user_id = 2; // ID of the user sending the message.
-  string content = 3; // Content of the message.
+  // ID of the chat to send the message to.
+  int64 chat_id = 1 [
+    json_name = "chat_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // ID of the user sending the message.
+  int64 user_id = 2 [
+    json_name = "user_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
+
+  // Content of the message.
+  string content = 3 [
+    json_name = "content",
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 2000,
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Response after a message is successfully sent.
 message SendMessageResponse {
-  string message_id = 1; // ID of the newly created message.
+  // ID of the newly created message.
+  int64 message_id = 1 [
+    json_name = "message_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Request to get all messages for a chat.
 message GetMessagesRequest {
-  string chat_id = 1; // ID of the chat to retrieve messages from.
+  // ID of the chat to retrieve messages from.
+  int64 chat_id = 1 [
+    json_name = "chat_id",
+    (buf.validate.field).int64.gt = 0,
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 // Response with a list of messages.
