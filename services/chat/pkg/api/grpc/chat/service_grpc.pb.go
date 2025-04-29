@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ChatService_SendMessage_FullMethodName = "/github.com.nazarovnick.chat_platform.chat.grpc.ChatService/SendMessage"
-	ChatService_GetMessages_FullMethodName = "/github.com.nazarovnick.chat_platform.chat.grpc.ChatService/GetMessages"
+	ChatService_SendMessage_FullMethodName = "/github.com.nazarovnick.chat_platform.chat.ChatService/SendMessage"
+	ChatService_GetMessages_FullMethodName = "/github.com.nazarovnick.chat_platform.chat.ChatService/GetMessages"
 )
 
 // ChatServiceClient is the client API for ChatService service.
@@ -142,7 +142,7 @@ func _ChatService_GetMessages_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ChatService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "github.com.nazarovnick.chat_platform.chat.grpc.ChatService",
+	ServiceName: "github.com.nazarovnick.chat_platform.chat.ChatService",
 	HandlerType: (*ChatServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

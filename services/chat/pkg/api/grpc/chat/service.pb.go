@@ -7,6 +7,8 @@
 package chat
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -24,22 +26,26 @@ var File_service_proto protoreflect.FileDescriptor
 
 const file_service_proto_rawDesc = "" +
 	"\n" +
-	"\rservice.proto\x12.github.com.nazarovnick.chat_platform.chat.grpc\x1a\x0emessages.proto2\xbf\x02\n" +
-	"\vChatService\x12\x96\x01\n" +
-	"\vSendMessage\x12B.github.com.nazarovnick.chat_platform.chat.grpc.SendMessageRequest\x1aC.github.com.nazarovnick.chat_platform.chat.grpc.SendMessageResponse\x12\x96\x01\n" +
-	"\vGetMessages\x12B.github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesRequest\x1aC.github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesResponseB\x18Z\x16pkg/api/grpc/chat;chatb\x06proto3"
+	"\rservice.proto\x12)github.com.nazarovnick.chat_platform.chat\x1a\x0emessages.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xe0\x02\n" +
+	"\vChatService\x12\xa6\x01\n" +
+	"\vSendMessage\x12=.github.com.nazarovnick.chat_platform.chat.SendMessageRequest\x1a>.github.com.nazarovnick.chat_platform.chat.SendMessageResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/chat/send\x12\xa7\x01\n" +
+	"\vGetMessages\x12=.github.com.nazarovnick.chat_platform.chat.GetMessagesRequest\x1a>.github.com.nazarovnick.chat_platform.chat.GetMessagesResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/chat/messagesB\xb5\x02\x92A\x99\x02\x12\xc7\x01\n" +
+	"\fChat service\"X\n" +
+	"\x14gRPC-Gateway project\x12.https://github.com/grpc-ecosystem/grpc-gateway\x1a\x10none@example.com*X\n" +
+	"\x14BSD 3-Clause License\x12@https://github.com/grpc-ecosystem/grpc-gateway/blob/main/LICENSE2\x031.0*\x02\x01\x02rI\n" +
+	"\x17More about gRPC-Gateway\x12.https://github.com/grpc-ecosystem/grpc-gatewayZ\x16pkg/api/grpc/chat;chatb\x06proto3"
 
 var file_service_proto_goTypes = []any{
-	(*SendMessageRequest)(nil),  // 0: github.com.nazarovnick.chat_platform.chat.grpc.SendMessageRequest
-	(*GetMessagesRequest)(nil),  // 1: github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesRequest
-	(*SendMessageResponse)(nil), // 2: github.com.nazarovnick.chat_platform.chat.grpc.SendMessageResponse
-	(*GetMessagesResponse)(nil), // 3: github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesResponse
+	(*SendMessageRequest)(nil),  // 0: github.com.nazarovnick.chat_platform.chat.SendMessageRequest
+	(*GetMessagesRequest)(nil),  // 1: github.com.nazarovnick.chat_platform.chat.GetMessagesRequest
+	(*SendMessageResponse)(nil), // 2: github.com.nazarovnick.chat_platform.chat.SendMessageResponse
+	(*GetMessagesResponse)(nil), // 3: github.com.nazarovnick.chat_platform.chat.GetMessagesResponse
 }
 var file_service_proto_depIdxs = []int32{
-	0, // 0: github.com.nazarovnick.chat_platform.chat.grpc.ChatService.SendMessage:input_type -> github.com.nazarovnick.chat_platform.chat.grpc.SendMessageRequest
-	1, // 1: github.com.nazarovnick.chat_platform.chat.grpc.ChatService.GetMessages:input_type -> github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesRequest
-	2, // 2: github.com.nazarovnick.chat_platform.chat.grpc.ChatService.SendMessage:output_type -> github.com.nazarovnick.chat_platform.chat.grpc.SendMessageResponse
-	3, // 3: github.com.nazarovnick.chat_platform.chat.grpc.ChatService.GetMessages:output_type -> github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesResponse
+	0, // 0: github.com.nazarovnick.chat_platform.chat.ChatService.SendMessage:input_type -> github.com.nazarovnick.chat_platform.chat.SendMessageRequest
+	1, // 1: github.com.nazarovnick.chat_platform.chat.ChatService.GetMessages:input_type -> github.com.nazarovnick.chat_platform.chat.GetMessagesRequest
+	2, // 2: github.com.nazarovnick.chat_platform.chat.ChatService.SendMessage:output_type -> github.com.nazarovnick.chat_platform.chat.SendMessageResponse
+	3, // 3: github.com.nazarovnick.chat_platform.chat.ChatService.GetMessages:output_type -> github.com.nazarovnick.chat_platform.chat.GetMessagesResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

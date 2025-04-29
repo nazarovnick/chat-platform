@@ -1,13 +1,26 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "service.proto",
-    "version": "version not set"
+    "title": "Chat service",
+    "version": "1.0",
+    "contact": {
+      "name": "gRPC-Gateway project",
+      "url": "https://github.com/grpc-ecosystem/grpc-gateway",
+      "email": "none@example.com"
+    },
+    "license": {
+      "name": "BSD 3-Clause License",
+      "url": "https://github.com/grpc-ecosystem/grpc-gateway/blob/main/LICENSE"
+    }
   },
   "tags": [
     {
       "name": "ChatService"
     }
+  ],
+  "schemes": [
+    "http",
+    "https"
   ],
   "consumes": [
     "application/json"
@@ -15,23 +28,89 @@
   "produces": [
     "application/json"
   ],
-  "paths": {},
+  "paths": {
+    "/v1/chat/messages": {
+      "get": {
+        "operationId": "ChatService_GetMessages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/chatGetMessagesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "chat_id",
+            "description": "ID of the chat to retrieve messages from.",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ChatService"
+        ]
+      }
+    },
+    "/v1/chat/send": {
+      "post": {
+        "operationId": "ChatService_SendMessage",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/chatSendMessageResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Request to send a new message.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/chatSendMessageRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ChatService"
+        ]
+      }
+    }
+  },
   "definitions": {
-    "grpcGetMessagesResponse": {
+    "chatGetMessagesResponse": {
       "type": "object",
       "properties": {
         "messages": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/grpcMessage"
+            "$ref": "#/definitions/chatMessage"
           },
           "description": "List of messages."
         }
       },
       "description": "Response with a list of messages."
     },
-    "grpcMessage": {
+    "chatMessage": {
       "type": "object",
       "properties": {
         "id": {
@@ -68,7 +147,32 @@
         "timestamp"
       ]
     },
-    "grpcSendMessageResponse": {
+    "chatSendMessageRequest": {
+      "type": "object",
+      "properties": {
+        "chat_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the chat to send the message to."
+        },
+        "user_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "ID of the user sending the message."
+        },
+        "content": {
+          "type": "string",
+          "description": "Content of the message."
+        }
+      },
+      "description": "Request to send a new message.",
+      "required": [
+        "chat_id",
+        "user_id",
+        "content"
+      ]
+    },
+    "chatSendMessageResponse": {
       "type": "object",
       "properties": {
         "message_id": {
@@ -110,5 +214,9 @@
         }
       }
     }
+  },
+  "externalDocs": {
+    "description": "More about gRPC-Gateway",
+    "url": "https://github.com/grpc-ecosystem/grpc-gateway"
   }
 }

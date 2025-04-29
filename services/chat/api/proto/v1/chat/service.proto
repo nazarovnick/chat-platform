@@ -1,12 +1,45 @@
 syntax = "proto3";
 
-package github.com.nazarovnick.chat_platform.chat.grpc;
+package github.com.nazarovnick.chat_platform.chat;
 
 import "messages.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "pkg/api/grpc/chat;chat";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Chat service"
+    version: "1.0"
+    contact: {
+      name: "gRPC-Gateway project"
+      url: "https://github.com/grpc-ecosystem/grpc-gateway"
+      email: "none@example.com"
+    }
+    license: {
+      name: "BSD 3-Clause License"
+      url: "https://github.com/grpc-ecosystem/grpc-gateway/blob/main/LICENSE"
+    }
+  }
+  external_docs: {
+    url: "https://github.com/grpc-ecosystem/grpc-gateway"
+    description: "More about gRPC-Gateway"
+  }
+  schemes: HTTP
+  schemes: HTTPS
+};
+
 
 service ChatService {
-  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
-  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {
+    option (google.api.http) = {
+      post: "/v1/chat/send"
+      body: "*"
+    };
+  }
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse) {
+    option (google.api.http) = {
+      get: "/v1/chat/messages"
+    };
+  }
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package github.com.nazarovnick.chat_platform.chat.grpc;
+package github.com.nazarovnick.chat_platform.chat;
 
 option go_package = "pkg/api/grpc/chat;chat";
 

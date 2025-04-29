@@ -310,7 +310,7 @@ var File_messages_proto protoreflect.FileDescriptor
 
 const file_messages_proto_rawDesc = "" +
 	"\n" +
-	"\x0emessages.proto\x12.github.com.nazarovnick.chat_platform.chat.grpc\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bbuf/validate/validate.proto\"\xc4\x01\n" +
+	"\x0emessages.proto\x12)github.com.nazarovnick.chat_platform.chat\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bbuf/validate/validate.proto\"\xc4\x01\n" +
 	"\aMessage\x12\x1a\n" +
 	"\x02id\x18\x01 \x01(\x04B\n" +
 	"\xe0A\x02\xbaH\x04\"\x02 \x00R\x02id\x12$\n" +
@@ -334,9 +334,9 @@ const file_messages_proto_rawDesc = "" +
 	"message_id\":\n" +
 	"\x12GetMessagesRequest\x12$\n" +
 	"\achat_id\x18\x01 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\achat_id\"j\n" +
-	"\x13GetMessagesResponse\x12S\n" +
-	"\bmessages\x18\x01 \x03(\v27.github.com.nazarovnick.chat_platform.chat.grpc.MessageR\bmessagesB\x18Z\x16pkg/api/grpc/chat;chatb\x06proto3"
+	"\xe0A\x02\xbaH\x04\"\x02 \x00R\achat_id\"e\n" +
+	"\x13GetMessagesResponse\x12N\n" +
+	"\bmessages\x18\x01 \x03(\v22.github.com.nazarovnick.chat_platform.chat.MessageR\bmessagesB\x18Z\x16pkg/api/grpc/chat;chatb\x06proto3"
 
 var (
 	file_messages_proto_rawDescOnce sync.Once
@@ -352,14 +352,14 @@ func file_messages_proto_rawDescGZIP() []byte {
 
 var file_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_messages_proto_goTypes = []any{
-	(*Message)(nil),             // 0: github.com.nazarovnick.chat_platform.chat.grpc.Message
-	(*SendMessageRequest)(nil),  // 1: github.com.nazarovnick.chat_platform.chat.grpc.SendMessageRequest
-	(*SendMessageResponse)(nil), // 2: github.com.nazarovnick.chat_platform.chat.grpc.SendMessageResponse
-	(*GetMessagesRequest)(nil),  // 3: github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesRequest
-	(*GetMessagesResponse)(nil), // 4: github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesResponse
+	(*Message)(nil),             // 0: github.com.nazarovnick.chat_platform.chat.Message
+	(*SendMessageRequest)(nil),  // 1: github.com.nazarovnick.chat_platform.chat.SendMessageRequest
+	(*SendMessageResponse)(nil), // 2: github.com.nazarovnick.chat_platform.chat.SendMessageResponse
+	(*GetMessagesRequest)(nil),  // 3: github.com.nazarovnick.chat_platform.chat.GetMessagesRequest
+	(*GetMessagesResponse)(nil), // 4: github.com.nazarovnick.chat_platform.chat.GetMessagesResponse
 }
 var file_messages_proto_depIdxs = []int32{
-	0, // 0: github.com.nazarovnick.chat_platform.chat.grpc.GetMessagesResponse.messages:type_name -> github.com.nazarovnick.chat_platform.chat.grpc.Message
+	0, // 0: github.com.nazarovnick.chat_platform.chat.GetMessagesResponse.messages:type_name -> github.com.nazarovnick.chat_platform.chat.Message
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
