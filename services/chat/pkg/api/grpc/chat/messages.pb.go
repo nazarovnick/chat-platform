@@ -27,15 +27,15 @@ const (
 type Message struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Unique identifier of the message.
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 	// Chat ID where the message was sent.
-	ChatId int64 `protobuf:"varint,2,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
+	ChatId uint32 `protobuf:"varint,2,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
 	// User ID who sent the message.
-	UserId int64 `protobuf:"varint,3,opt,name=user_id,proto3" json:"user_id,omitempty"`
+	UserId uint32 `protobuf:"varint,3,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	// Content of the message.
 	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	// Timestamp when the message was sent (Unix time).
-	Timestamp     int64 `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     uint32 `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,21 +70,21 @@ func (*Message) Descriptor() ([]byte, []int) {
 	return file_messages_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetId() uint64 {
+func (x *Message) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *Message) GetChatId() int64 {
+func (x *Message) GetChatId() uint32 {
 	if x != nil {
 		return x.ChatId
 	}
 	return 0
 }
 
-func (x *Message) GetUserId() int64 {
+func (x *Message) GetUserId() uint32 {
 	if x != nil {
 		return x.UserId
 	}
@@ -98,7 +98,7 @@ func (x *Message) GetContent() string {
 	return ""
 }
 
-func (x *Message) GetTimestamp() int64 {
+func (x *Message) GetTimestamp() uint32 {
 	if x != nil {
 		return x.Timestamp
 	}
@@ -109,9 +109,9 @@ func (x *Message) GetTimestamp() int64 {
 type SendMessageRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the chat to send the message to.
-	ChatId int64 `protobuf:"varint,1,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
+	ChatId uint32 `protobuf:"varint,1,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
 	// ID of the user sending the message.
-	UserId int64 `protobuf:"varint,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
+	UserId uint32 `protobuf:"varint,2,opt,name=user_id,proto3" json:"user_id,omitempty"`
 	// Content of the message.
 	Content       string `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -148,14 +148,14 @@ func (*SendMessageRequest) Descriptor() ([]byte, []int) {
 	return file_messages_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *SendMessageRequest) GetChatId() int64 {
+func (x *SendMessageRequest) GetChatId() uint32 {
 	if x != nil {
 		return x.ChatId
 	}
 	return 0
 }
 
-func (x *SendMessageRequest) GetUserId() int64 {
+func (x *SendMessageRequest) GetUserId() uint32 {
 	if x != nil {
 		return x.UserId
 	}
@@ -173,7 +173,7 @@ func (x *SendMessageRequest) GetContent() string {
 type SendMessageResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the newly created message.
-	MessageId     int64 `protobuf:"varint,1,opt,name=message_id,proto3" json:"message_id,omitempty"`
+	MessageId     uint32 `protobuf:"varint,1,opt,name=message_id,proto3" json:"message_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -208,7 +208,7 @@ func (*SendMessageResponse) Descriptor() ([]byte, []int) {
 	return file_messages_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *SendMessageResponse) GetMessageId() int64 {
+func (x *SendMessageResponse) GetMessageId() uint32 {
 	if x != nil {
 		return x.MessageId
 	}
@@ -219,7 +219,7 @@ func (x *SendMessageResponse) GetMessageId() int64 {
 type GetMessagesRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// ID of the chat to retrieve messages from.
-	ChatId        int64 `protobuf:"varint,1,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
+	ChatId        uint32 `protobuf:"varint,1,opt,name=chat_id,proto3" json:"chat_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -254,7 +254,7 @@ func (*GetMessagesRequest) Descriptor() ([]byte, []int) {
 	return file_messages_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *GetMessagesRequest) GetChatId() int64 {
+func (x *GetMessagesRequest) GetChatId() uint32 {
 	if x != nil {
 		return x.ChatId
 	}
@@ -312,29 +312,29 @@ const file_messages_proto_rawDesc = "" +
 	"\n" +
 	"\x0emessages.proto\x12)github.com.nazarovnick.chat_platform.chat\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bbuf/validate/validate.proto\"\xc4\x01\n" +
 	"\aMessage\x12\x1a\n" +
-	"\x02id\x18\x01 \x01(\x04B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\x02id\x12$\n" +
-	"\achat_id\x18\x02 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\achat_id\x12$\n" +
-	"\auser_id\x18\x03 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\auser_id\x12'\n" +
+	"\x02id\x18\x01 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\x02id\x12$\n" +
+	"\achat_id\x18\x02 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\achat_id\x12$\n" +
+	"\auser_id\x18\x03 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\auser_id\x12'\n" +
 	"\acontent\x18\x04 \x01(\tB\r\xe0A\x02\xbaH\ar\x05\x10\x01\x18\xd0\x0fR\acontent\x12(\n" +
-	"\ttimestamp\x18\x05 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\ttimestamp\"\x89\x01\n" +
+	"\ttimestamp\x18\x05 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\ttimestamp\"\x89\x01\n" +
 	"\x12SendMessageRequest\x12$\n" +
-	"\achat_id\x18\x01 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\achat_id\x12$\n" +
-	"\auser_id\x18\x02 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\auser_id\x12'\n" +
+	"\achat_id\x18\x01 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\achat_id\x12$\n" +
+	"\auser_id\x18\x02 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\auser_id\x12'\n" +
 	"\acontent\x18\x03 \x01(\tB\r\xe0A\x02\xbaH\ar\x05\x10\x01\x18\xd0\x0fR\acontent\"A\n" +
 	"\x13SendMessageResponse\x12*\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\n" +
+	"message_id\x18\x01 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\n" +
 	"message_id\":\n" +
 	"\x12GetMessagesRequest\x12$\n" +
-	"\achat_id\x18\x01 \x01(\x03B\n" +
-	"\xe0A\x02\xbaH\x04\"\x02 \x00R\achat_id\"e\n" +
+	"\achat_id\x18\x01 \x01(\rB\n" +
+	"\xe0A\x02\xbaH\x04*\x02 \x00R\achat_id\"e\n" +
 	"\x13GetMessagesResponse\x12N\n" +
 	"\bmessages\x18\x01 \x03(\v22.github.com.nazarovnick.chat_platform.chat.MessageR\bmessagesB\x18Z\x16pkg/api/grpc/chat;chatb\x06proto3"
 

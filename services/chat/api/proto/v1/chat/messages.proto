@@ -11,23 +11,23 @@ import "buf/validate/validate.proto";
 // Message represents a chat message.
 message Message {
   // Unique identifier of the message.
-  uint64 id = 1 [
+  uint32 id = 1 [
     json_name = "id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 
   // Chat ID where the message was sent.
-  int64 chat_id = 2 [
+  uint32 chat_id = 2 [
     json_name = "chat_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 
   // User ID who sent the message.
-  int64 user_id = 3 [
+  uint32 user_id = 3 [
     json_name = "user_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 
@@ -40,9 +40,9 @@ message Message {
   ];
 
   // Timestamp when the message was sent (Unix time).
-  int64 timestamp = 5 [
+  uint32 timestamp = 5 [
     json_name = "timestamp",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 }
@@ -50,16 +50,16 @@ message Message {
 // Request to send a new message.
 message SendMessageRequest {
   // ID of the chat to send the message to.
-  int64 chat_id = 1 [
+  uint32 chat_id = 1 [
     json_name = "chat_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 
   // ID of the user sending the message.
-  int64 user_id = 2 [
+  uint32 user_id = 2 [
     json_name = "user_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 
@@ -75,9 +75,9 @@ message SendMessageRequest {
 // Response after a message is successfully sent.
 message SendMessageResponse {
   // ID of the newly created message.
-  int64 message_id = 1 [
+  uint32 message_id = 1 [
     json_name = "message_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 }
@@ -85,9 +85,9 @@ message SendMessageResponse {
 // Request to get all messages for a chat.
 message GetMessagesRequest {
   // ID of the chat to retrieve messages from.
-  int64 chat_id = 1 [
+  uint32 chat_id = 1 [
     json_name = "chat_id",
-    (buf.validate.field).int64.gt = 0,
+    (buf.validate.field).uint32.gt = 0,
     (google.api.field_behavior) = REQUIRED
   ];
 }

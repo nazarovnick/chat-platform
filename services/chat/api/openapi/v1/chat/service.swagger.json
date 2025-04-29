@@ -52,7 +52,7 @@
             "description": "ID of the chat to retrieve messages from.",
             "in": "query",
             "required": true,
-            "type": "string",
+            "type": "integer",
             "format": "int64"
           }
         ],
@@ -114,17 +114,17 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string",
-          "format": "uint64",
+          "type": "integer",
+          "format": "int64",
           "description": "Unique identifier of the message."
         },
         "chat_id": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "Chat ID where the message was sent."
         },
         "user_id": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "User ID who sent the message."
         },
@@ -133,7 +133,7 @@
           "description": "Content of the message."
         },
         "timestamp": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "Timestamp when the message was sent (Unix time)."
         }
@@ -151,12 +151,12 @@
       "type": "object",
       "properties": {
         "chat_id": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "ID of the chat to send the message to."
         },
         "user_id": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "ID of the user sending the message."
         },
@@ -176,7 +176,7 @@
       "type": "object",
       "properties": {
         "message_id": {
-          "type": "string",
+          "type": "integer",
           "format": "int64",
           "description": "ID of the newly created message."
         }

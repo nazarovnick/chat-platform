@@ -6,10 +6,6 @@ import (
 )
 
 func RegisterSwaggerRoutes(router *mux.Router) {
-	router.HandleFunc("/swagger", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/swagger/", http.StatusMovedPermanently)
-	})
-
 	swagger := router.PathPrefix("/swagger/").Subrouter()
 
 	// OpenAPI .json-file
