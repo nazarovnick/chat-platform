@@ -19,6 +19,9 @@ PROTOC = PATH="$$PATH:$(LOCAL_BIN)" protoc
 # Path to the protobuf files
 PROTO_PATH := $(CURDIR)/api/proto/$(API_VERSION)/$(SERVICE_NAME)
 
+# Path to the openapi files
+OPENAPI_PATH := $(CURDIR)/api/openapi/$(API_VERSION)/$(SERVICE_NAME)
+
 # Путь до завендореных protobuf файлов
 VENDOR_PROTO_PATH := $(CURDIR)/vendor.protobuf
 
@@ -34,6 +37,7 @@ PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 	go install github.com/bufbuild/buf/cmd/buf@v1.32.2
 	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+	go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 
 # Generate .go files from .proto files using protoc
 .protoc-generate:
@@ -44,6 +48,11 @@ PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
 	--grpc-gateway_out=$(PKG_PROTO_PATH) --grpc-gateway_opt paths=source_relative --grpc-gateway_opt generate_unbound_methods=true \
 	$(PROTO_PATH)/service.proto \
 	$(PROTO_PATH)/messages.proto
+
+	mkdir -p $(OPENAPI_PATH)
+	$(PROTOC) -I $(VENDOR_PROTO_PATH) --proto_path=$(PROTO_PATH) \
+	--openapiv2_out=$(OPENAPI_PATH) --openapiv2_opt logtostderr=true \
+	$(PROTO_PATH)/service.proto
 
 # Run go mod tidy to clean up go.mod and go.sum
 .tidy:
