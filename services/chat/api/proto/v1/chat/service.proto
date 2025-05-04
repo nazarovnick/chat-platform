@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package github.com.nazarovnick.chat_platform.chat;
 
+import "api/proto/v1/chat/messages.proto";
 import "google/api/annotations.proto";
-import "messages.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "pkg/api/grpc/chat;chat";
