@@ -1,0 +1,600 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.user;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/user/v1;v1";
+
+message GetUserRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetUserRequest"
+      description: "Запрос на получение информации о пользователе"
+      required: ["user_uuid"]
+      example:
+        "{"
+        "\"user_uuid\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\""
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID пользователя"
+      description:
+        "UUID пользователя, по которому необходимо "
+        "получить информацию"
+    }
+  ];
+}
+
+message GetUserResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetUserResponse"
+      description: "Ответ на запрос о получении информации о пользователе"
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"vasyan888\",\n"
+        "\"age\": 30,\n"
+        "\"birth_date\": \"1993-05-21T00:00:00Z\",\n"
+        "\"avatar_url\": \"https://kakoi-to-sait.com/avatar.png\",\n"
+        "\"created_at\": \"2024-01-01T10:00:00Z\",\n"
+        "\"soft_deleted\": false\n"
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description: "Уникальный идентификатор пользователя"
+    }
+  ];
+
+  string nickname = 2 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+
+  uint32 age = 3 [
+    json_name = "age",
+    (buf.validate.field).uint32.gte = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Возраст пользователя"
+      description: "Целое число, указывающее возраст пользователя в годах"
+    }
+  ];
+
+  google.protobuf.Timestamp birth_date = 4 [
+    json_name = "birth_date",
+    (buf.validate.field).timestamp.lt_now = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата рождения пользователя"
+      description: "Дата рождения пользователя"
+    }
+  ];
+
+  string avatar_url = 5 [
+    json_name = "avatar_url",
+    (buf.validate.field).string.uri = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ссылка на аватар"
+      description: "URL-адрес изображения профиля пользователя"
+    }
+  ];
+
+  google.protobuf.Timestamp created_at = 6 [
+    json_name = "created_at",
+    (buf.validate.field).timestamp = {lt_now: true},
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата создания пользователя"
+      description: "Дата создания профиля пользователя"
+    }
+  ];
+
+  bool soft_deleted = 7 [
+    json_name = "soft_deleted",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Флаг мягкого удаления"
+      description:
+        "Если true — пользователь считается удалённым, "
+        "но физически остаётся в системе"
+    }
+  ];
+}
+
+message GetUserByNicknameRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetUserByNickname"
+      description: "Запрос на получение информации о пользователе по никнейму"
+      required: ["nickname"]
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"vasyan888\",\n"
+        "\"age\": 30,\n"
+        "\"birth_date\": \"1993-05-21T00:00:00Z\",\n"
+        "\"avatar_url\": \"https://kakoi-to-sait.com/avatar.png\",\n"
+        "\"created_at\": \"2024-01-01T10:00:00Z\",\n"
+        "\"soft_deleted\": false\n"
+        "}"
+    }
+  };
+
+  string nickname = 1 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+}
+
+message GetUserByNicknameResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetUserByNicknameResponse"
+      description:
+        "Ответ на запрос о получении информации о пользователе "
+        "по никнейму"
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"vasyan888\",\n"
+        "\"age\": 30,\n"
+        "\"birth_date\": \"1993-05-21T00:00:00Z\",\n"
+        "\"avatar_url\": \"https://kakoi-to-sait.com/avatar.png\",\n"
+        "\"created_at\": \"2024-01-01T10:00:00Z\",\n"
+        "\"soft_deleted\": false\n"
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description: "Уникальный идентификатор пользователя"
+    }
+  ];
+
+  string nickname = 2 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+
+  uint32 age = 3 [
+    json_name = "age",
+    (buf.validate.field).uint32.gte = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Возраст пользователя"
+      description: "Целое число, указывающее возраст пользователя в годах"
+    }
+  ];
+
+  google.protobuf.Timestamp birth_date = 4 [
+    json_name = "birth_date",
+    (buf.validate.field).timestamp.lt_now = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата рождения пользователя"
+      description: "Дата рождения пользователя"
+    }
+  ];
+
+  string avatar_url = 5 [
+    json_name = "avatar_url",
+    (buf.validate.field).string.uri = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ссылка на аватар"
+      description: "URL-адрес изображения профиля пользователя"
+    }
+  ];
+
+  google.protobuf.Timestamp created_at = 6 [
+    json_name = "created_at",
+    (buf.validate.field).timestamp = {lt_now: true},
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата создания пользователя"
+      description: "Дата создания профиля пользователя"
+    }
+  ];
+
+  bool soft_deleted = 7 [
+    json_name = "soft_deleted",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Флаг мягкого удаления"
+      description:
+        "Если true — пользователь считается удалённым, "
+        "но физически остаётся в системе"
+    }
+  ];
+}
+
+message UpdateUserRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "UpdateUserRequest"
+      description:
+        "Запрос на обновление профиля пользователя.\n"
+        "Позволяет изменить один или несколько полей профиля: "
+        "никнейм, дату рождения, аватар и статус мягкого удаления."
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"SuperVasyan888\""
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description: "Уникальный идентификатор пользователя"
+    }
+  ];
+
+  google.protobuf.StringValue nickname = 2 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+
+  google.protobuf.Timestamp birth_date = 3 [
+    json_name = "birth_date",
+    (buf.validate.field).timestamp.lt_now = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата рождения пользователя"
+      description: "Дата рождения пользователя"
+    }
+  ];
+
+  google.protobuf.StringValue avatar_url = 4 [
+    json_name = "avatar_url",
+    (buf.validate.field).string.uri = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ссылка на аватар"
+      description: "URL-адрес изображения профиля пользователя"
+    }
+  ];
+
+  google.protobuf.BoolValue soft_deleted = 5 [
+    json_name = "soft_deleted",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Флаг мягкого удаления"
+      description:
+        "Если true — пользователь считается удалённым, "
+        "но физически остаётся в системе"
+    }
+  ];
+}
+
+message UpdateUserResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "UpdateUserResponse"
+      description: "Ответ на запрос обновления профиля пользователя"
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"SuperVasyan888\",\n"
+        "\"age\": 30,\n"
+        "\"birth_date\": \"1993-05-21T00:00:00Z\",\n"
+        "\"avatar_url\": \"https://kakoi-to-sait.com/avatar.png\",\n"
+        "\"created_at\": \"2024-01-01T10:00:00Z\",\n"
+        "\"soft_deleted\": false\n"
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description: "Уникальный идентификатор пользователя"
+    }
+  ];
+
+  string nickname = 2 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+
+  uint32 age = 3 [
+    json_name = "age",
+    (buf.validate.field).uint32.gte = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Возраст пользователя"
+      description: "Целое число, указывающее возраст пользователя в годах"
+    }
+  ];
+
+  google.protobuf.Timestamp birth_date = 4 [
+    json_name = "birth_date",
+    (buf.validate.field).timestamp.lt_now = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата рождения пользователя"
+      description: "Дата рождения пользователя"
+    }
+  ];
+
+  string avatar_url = 5 [
+    json_name = "avatar_url",
+    (buf.validate.field).string.uri = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ссылка на аватар"
+      description: "URL-адрес изображения профиля пользователя"
+    }
+  ];
+
+  google.protobuf.Timestamp created_at = 6 [
+    json_name = "created_at",
+    (buf.validate.field).timestamp = {lt_now: true},
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата создания пользователя"
+      description: "Дата создания профиля пользователя"
+    }
+  ];
+
+  bool soft_deleted = 7 [
+    json_name = "soft_deleted",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Флаг мягкого удаления"
+      description:
+        "Если true — пользователь считается удалённым, "
+        "но физически остаётся в системе"
+    }
+  ];
+}
+
+message SearchUsersByNicknameRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SearchUsersByNicknameRequest"
+      description: "Запрос на поиск пользователей по части никнейма"
+      example:
+        "{"
+        "\"query\": \"vasya\",\n"
+        "\"limit\": 20,\n"
+        "\"offset\": 50\n"
+        "}"
+    }
+  };
+
+  string query = 1 [
+    json_name = "query",
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Поисковый запрос"
+      description:
+        "Часть никнейма, по которому осуществляется поиск "
+        "пользователей"
+    }
+  ];
+
+  uint32 limit = 2 [
+    json_name = "limit",
+    (buf.validate.field).uint32.lte = 100,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ограничение количества"
+      description:
+        "Максимальное количество пользователей в ответе "
+        "(по умолчанию 10)"
+    }
+  ];
+
+  uint32 offset = 3 [
+    json_name = "offset",
+    (buf.validate.field).uint32.gte = 0,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Смещение"
+      description:
+        "Количество записей, которые нужно пропустить "
+        "(для пагинации)"
+    }
+  ];
+}
+
+message SearchUsersByNicknameResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SearchUsersByNicknameResponse"
+      description: "Ответ на запрос поиска пользователей по части никнейма"
+      example:
+        "{\n"
+        "  \"users\": [\n"
+        "    {\n"
+        "      \"user_uuid\": \"11111111-1111-1111-1111-111111111111\",\n"
+        "      \"nickname\": \"vasyan1\",\n"
+        "      \"age\": 27,\n"
+        "      \"birth_date\": \"1996-08-15T00:00:00Z\",\n"
+        "      \"avatar_url\": \"https://example.com/avatar1.png\",\n"
+        "      \"created_at\": \"2023-01-01T12:00:00Z\",\n"
+        "      \"soft_deleted\": false\n"
+        "    },\n"
+        "    {\n"
+        "      \"user_uuid\": \"22222222-2222-2222-2222-222222222222\",\n"
+        "      \"nickname\": \"vasyan2\",\n"
+        "      \"age\": 31,\n"
+        "      \"birth_date\": \"1993-04-12T00:00:00Z\",\n"
+        "      \"avatar_url\": \"https://example.com/avatar2.png\",\n"
+        "      \"created_at\": \"2022-06-10T10:30:00Z\",\n"
+        "      \"soft_deleted\": false\n"
+        "    }\n"
+        "  ]\n"
+        "}"
+    }
+  };
+
+  repeated User users = 1 [
+    json_name = "users",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Список пользователей"
+      description: "Результат поиска — пользователи, соответствующие запросу"
+    }
+  ];
+}
+
+message User {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "User"
+      description: "Модель пользователя, содержащая основные сведения о нём"
+      example:
+        "{"
+        "\"user_uuid\": \"123e4567-e89b-12d3-a456-426614174000\",\n"
+        "\"nickname\": \"vasyan888\",\n"
+        "\"age\": 30,\n"
+        "\"birth_date\": \"1993-05-21T00:00:00Z\",\n"
+        "\"avatar_url\": \"https://kakoi-to-sait.com/avatar.png\",\n"
+        "\"created_at\": \"2024-01-01T10:00:00Z\",\n"
+        "\"soft_deleted\": false\n"
+        "}"
+    }
+  };
+
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description: "Уникальный идентификатор пользователя"
+    }
+  ];
+
+  string nickname = 2 [
+    json_name = "nickname",
+    (buf.validate.field).string = {
+      min_len: 3
+      max_len: 32
+      pattern: "^[a-zA-Z0-9_]+$"
+    },
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Никнейм"
+      description: "Уникальное имя пользователя, отображаемое публично"
+    }
+  ];
+
+  uint32 age = 3 [
+    json_name = "age",
+    (buf.validate.field).uint32.gte = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Возраст пользователя"
+      description: "Целое число, указывающее возраст пользователя в годах"
+    }
+  ];
+
+  google.protobuf.Timestamp birth_date = 4 [
+    json_name = "birth_date",
+    (buf.validate.field).timestamp.lt_now = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата рождения пользователя"
+      description: "Дата рождения пользователя"
+    }
+  ];
+
+  string avatar_url = 5 [
+    json_name = "avatar_url",
+    (buf.validate.field).string.uri = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Ссылка на аватар"
+      description: "URL-адрес изображения профиля пользователя"
+    }
+  ];
+
+  google.protobuf.Timestamp created_at = 6 [
+    json_name = "created_at",
+    (buf.validate.field).timestamp = {lt_now: true},
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Дата создания пользователя"
+      description: "Дата создания профиля пользователя"
+    }
+  ];
+
+  bool soft_deleted = 7 [
+    json_name = "soft_deleted",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Флаг мягкого удаления"
+      description:
+        "Если true — пользователь считается удалённым, "
+        "но физически остаётся в системе"
+    }
+  ];
+}
