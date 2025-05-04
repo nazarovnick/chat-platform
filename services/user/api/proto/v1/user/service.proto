@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.user;
+
+import "api/proto/v1/user/messages.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/user/v1;v1";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "User Service API"
+    version: "1.0.0"
+    description:
+      "API для управления пользователями, включая создание, обновление, "
+      "поиск по никнейму и получение профиля."
+    contact: {
+      name: "User Service Team"
+      url: "https://github.com/nazarovnick"
+    }
+    license: {
+      name: "MIT License"
+      url: "https://opensource.org/licenses/MIT"
+    }
+  }
+  external_docs: {
+    url: "https://github.com/nazarovnick/chat-platform/services/user"
+    description: "Полная документация и исходный код"
+  }
+  schemes: HTTP
+  schemes: HTTPS
+};
+
+service UserService {
+  // Retrieves user information by UUID
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {get: "/api/v1/users/{user_uuid}"};
+  }
+
+  // Retrieves user information by nickname
+  rpc GetUserByNickname(GetUserByNicknameRequest) returns (GetUserByNicknameResponse) {
+    option (google.api.http) = {get: "/api/v1/users/by-nickname/{nickname}"};
+  }
+
+  // Updates user profile data
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1/users/update"
+      body: "*"
+    };
+  }
+
+  // Searches users by a partial nickname match
+  rpc SearchUsersByNickname(SearchUsersByNicknameRequest) returns (SearchUsersByNicknameResponse) {
+    option (google.api.http) = {get: "/api/v1/users/search"};
+  }
+}

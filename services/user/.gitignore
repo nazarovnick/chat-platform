@@ -12,3 +12,7 @@
 
 # System
 .DS_Store
+
+# etc.
+bin
+vendor.protobuf
