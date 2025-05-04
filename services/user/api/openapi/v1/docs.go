@@ -5,11 +5,11 @@ import (
 	"github.com/swaggo/swag"
 )
 
-//go:embed friendship/*
+//go:embed user/*
 var swaggerFS embed.FS
 
 func swaggerContent() string {
-	bytes, _ := swaggerFS.ReadFile("friendship/service.swagger.json")
+	bytes, _ := swaggerFS.ReadFile("user/service.swagger.json")
 	return string(bytes)
 }
 
