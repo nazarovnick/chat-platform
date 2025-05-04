@@ -12,8 +12,8 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     title: "Friendship Service API"
     version: "1.0.0"
     description:
-      "API for managing friendship interactions between users, "
-      "including sending, accepting, declining, and removing friend requests."
+      "API для управления взаимодействием дружбы между пользователями, "
+      "включая отправку, принятие, отклонение и удаление запросов в друзья."
     contact: {
       name: "Friendship Service Team"
       url: "https://github.com/nazarovnick"
@@ -25,7 +25,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
   external_docs: {
     url: "https://github.com/nazarovnick/chat-platform/services/friendship"
-    description: "Full documentation and source code"
+    description: "Полная документация и исходный код"
   }
   schemes: HTTP
   schemes: HTTPS
