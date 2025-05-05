@@ -1,16 +1,16 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "Chat service",
-    "version": "1.0",
+    "title": "Chat Service API",
+    "description": "API для работы с чатом, включая отправку сообщений, получение списка сообщений и управление диалогами",
+    "version": "1.0.0",
     "contact": {
-      "name": "gRPC-Gateway project",
-      "url": "https://github.com/grpc-ecosystem/grpc-gateway",
-      "email": "none@example.com"
+      "name": "Chat Service Team",
+      "url": "https://github.com/nazarovnick"
     },
     "license": {
-      "name": "BSD 3-Clause License",
-      "url": "https://github.com/grpc-ecosystem/grpc-gateway/blob/main/LICENSE"
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
   "tags": [
@@ -49,11 +49,48 @@
         "parameters": [
           {
             "name": "chat_id",
-            "description": "ID of the chat to retrieve messages from.",
+            "description": "ID чата\n\nЦелочисленный идентификатор чата, из которого извлекаются сообщения",
             "in": "query",
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "name": "limit",
+            "description": "Лимит\n\nМаксимальное количество возвращаемых сообщений",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "description": "Смещение\n\nКоличество сообщений, которые нужно пропустить",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "timestamp",
+            "description": "Метка времени\n\nФильтрация сообщений по времени (Unix-время в секундах)",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "timestamp_filter",
+            "description": "Направление фильтрации по времени\n\nОпределяет, искать сообщения ДО или ПОСЛЕ указанного времени\n\n - TIME_FILTER_DIRECTION_UNSPECIFIED: No direction specified\n - TIME_FILTER_DIRECTION_BEFORE: Filter messages sent before the timestamp\n - TIME_FILTER_DIRECTION_AFTER: Filter messages sent after the timestamp",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TIME_FILTER_DIRECTION_UNSPECIFIED",
+              "TIME_FILTER_DIRECTION_BEFORE",
+              "TIME_FILTER_DIRECTION_AFTER"
+            ],
+            "default": "TIME_FILTER_DIRECTION_UNSPECIFIED"
           }
         ],
         "tags": [
@@ -81,7 +118,7 @@
         "parameters": [
           {
             "name": "body",
-            "description": "Request to send a new message.",
+            "description": "Запрос на отправку нового сообщения",
             "in": "body",
             "required": true,
             "schema": {
@@ -98,6 +135,24 @@
   "definitions": {
     "chatGetMessagesResponse": {
       "type": "object",
+      "example": {
+        "messages": [
+          {
+            "uuid": "67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1",
+            "chat_id": 102,
+            "user_uuid": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+            "content": "Hello!",
+            "timestamp": 1714998600
+          },
+          {
+            "uuid": "a2b3c4d5-6e7f-8a9b-c0d1-e2f3a4b5c6d7",
+            "chat_id": 102,
+            "user_uuid": "c1d2e3f4-5678-9abc-def0-1234567890ab",
+            "content": "Hi there!",
+            "timestamp": 1714998660
+          }
+        ]
+      },
       "properties": {
         "messages": {
           "type": "array",
@@ -105,86 +160,115 @@
             "type": "object",
             "$ref": "#/definitions/chatMessage"
           },
-          "description": "List of messages."
+          "description": "Список сообщений, полученных из указанного чата",
+          "title": "Сообщения"
         }
       },
-      "description": "Response with a list of messages."
+      "description": "Ответ, содержащий список сообщений чата",
+      "title": "GetMessagesResponse"
     },
     "chatMessage": {
       "type": "object",
+      "example": {
+        "uuid": "67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1",
+        "chat_id": 101,
+        "user_uuid": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+        "content": "Hello, world!",
+        "timestamp": 1714998600
+      },
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Unique identifier of the message."
+        "uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор сообщения",
+          "title": "UUID сообщения"
         },
         "chat_id": {
           "type": "integer",
           "format": "int64",
-          "description": "Chat ID where the message was sent."
+          "description": "Целочисленный идентификатор чата, в который отправлено сообщение",
+          "title": "ID чата"
         },
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "User ID who sent the message."
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя, отправившего сообщение",
+          "title": "UUID пользователя"
         },
         "content": {
           "type": "string",
-          "description": "Content of the message."
+          "description": "Текстовое содержимое сообщения (от 1 до 2000 символов)",
+          "title": "Содержимое"
         },
         "timestamp": {
           "type": "integer",
           "format": "int64",
-          "description": "Timestamp when the message was sent (Unix time)."
+          "description": "Время отправки сообщения в формате Unix Timestamp",
+          "title": "Метка времени"
         }
       },
-      "description": "Message represents a chat message.",
-      "required": [
-        "id",
-        "chat_id",
-        "user_id",
-        "content",
-        "timestamp"
-      ]
+      "description": "Модель сообщения",
+      "title": "Message"
     },
     "chatSendMessageRequest": {
       "type": "object",
+      "example": {
+        "chat_id": 102,
+        "user_uuid": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+        "content": "Hello, how are you?"
+      },
       "properties": {
         "chat_id": {
           "type": "integer",
           "format": "int64",
-          "description": "ID of the chat to send the message to."
+          "description": "Целочисленный идентификатор чата, в который отправлено сообщение",
+          "title": "ID чата"
         },
-        "user_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID of the user sending the message."
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя отправляющего сообщение",
+          "title": "UUID"
         },
         "content": {
           "type": "string",
-          "description": "Content of the message."
+          "description": "Текстовое содержимое сообщения (от 1 до 2000 символов)",
+          "title": "Содержимое"
         }
       },
-      "description": "Request to send a new message.",
+      "description": "Запрос на отправку нового сообщения",
+      "title": "SendMessageRequest",
       "required": [
         "chat_id",
-        "user_id",
+        "user_uuid",
         "content"
       ]
     },
     "chatSendMessageResponse": {
       "type": "object",
+      "example": {
+        "message_uuid": "67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1"
+      },
       "properties": {
-        "message_id": {
-          "type": "integer",
-          "format": "int64",
-          "description": "ID of the newly created message."
+        "message_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор сообщения",
+          "title": "UUID сообщения"
         }
       },
-      "description": "Response after a message is successfully sent.",
+      "description": "Ответ, содержащий UUID только что отправленного сообщения",
+      "title": "SendMessageResponse",
       "required": [
-        "message_id"
+        "message_uuid"
       ]
+    },
+    "chatTimeFilterDirection": {
+      "type": "string",
+      "enum": [
+        "TIME_FILTER_DIRECTION_UNSPECIFIED",
+        "TIME_FILTER_DIRECTION_BEFORE",
+        "TIME_FILTER_DIRECTION_AFTER"
+      ],
+      "default": "TIME_FILTER_DIRECTION_UNSPECIFIED",
+      "description": "EN:\nSpecifies how to filter messages based on the provided timestamp.\n\n1.) TIME_FILTER_DIRECTION_UNSPECIFIED: No direction specified\n2.) TIME_FILTER_DIRECTION_BEFORE: Filter messages sent before the timestamp\n3.) TIME_FILTER_DIRECTION_AFTER: Filter messages sent after the timestamp\n\n\nRU:\nОпределяет способ фильтрации сообщений по времени.\n\n1.) TIME_FILTER_DIRECTION_UNSPECIFIED: Направление фильтрации не указано\n2.) TIME_FILTER_DIRECTION_BEFORE: Фильтрация сообщений, отправленных до указанного времени\n3.) TIME_FILTER_DIRECTION_AFTER: Фильтрация сообщений, отправленных после указанного времени\n",
+      "title": "ENUM: TimeFilterDirection"
     },
     "protobufAny": {
       "type": "object",
@@ -216,7 +300,7 @@
     }
   },
   "externalDocs": {
-    "description": "More about gRPC-Gateway",
-    "url": "https://github.com/grpc-ecosystem/grpc-gateway"
+    "description": "Полная документация и исходный код",
+    "url": "https://github.com/nazarovnick/chat-platform/services/chat"
   }
 }

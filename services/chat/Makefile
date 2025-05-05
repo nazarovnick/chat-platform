@@ -26,7 +26,7 @@ OPENAPI_PATH := $(CURDIR)/api/openapi/$(API_VERSION)/$(SERVICE_NAME)
 VENDOR_PROTO_PATH := $(CURDIR)/vendor.protobuf
 
 # Path where the generated .pb.go files will be placed
-PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/$(SERVICE_NAME)
+PKG_PROTO_PATH := $(CURDIR)/pkg/api/grpc/
 
 # Install the required protoc plugins
 .bin-deps: export GOBIN := $(LOCAL_BIN)
@@ -48,17 +48,32 @@ lint: .proto-lint
 # Generate .go files from .proto files using protoc
 .protoc-generate:
 	mkdir -p $(PKG_PROTO_PATH)
-	$(PROTOC) -I $(VENDOR_PROTO_PATH) --proto_path=$(PROTO_PATH) \
-	--go_out=$(PKG_PROTO_PATH) --go_opt paths=source_relative \
-	--go-grpc_out=$(PKG_PROTO_PATH) --go-grpc_opt paths=source_relative \
-	--grpc-gateway_out=$(PKG_PROTO_PATH) --grpc-gateway_opt paths=source_relative --grpc-gateway_opt generate_unbound_methods=true \
-	$(PROTO_PATH)/service.proto \
-	$(PROTO_PATH)/messages.proto
+
+	$(PROTOC) \
+		-I $(VENDOR_PROTO_PATH) \
+		-I $(CURDIR) \
+		--go_out=$(PKG_PROTO_PATH) \
+		--go_opt paths=import \
+		--go-grpc_out=$(PKG_PROTO_PATH) \
+		--go-grpc_opt paths=import \
+		--grpc-gateway_out=$(PKG_PROTO_PATH) \
+		--grpc-gateway_opt paths=import \
+		--grpc-gateway_opt generate_unbound_methods=true \
+		api/proto/$(API_VERSION)/$(SERVICE_NAME)/service.proto \
+		api/proto/$(API_VERSION)/$(SERVICE_NAME)/messages.proto \
+		api/proto/$(API_VERSION)/$(SERVICE_NAME)/enums.proto
 
 	mkdir -p $(OPENAPI_PATH)
-	$(PROTOC) -I $(VENDOR_PROTO_PATH) --proto_path=$(PROTO_PATH) \
-	--openapiv2_out=$(OPENAPI_PATH) --openapiv2_opt logtostderr=true \
-	$(PROTO_PATH)/service.proto
+
+	$(PROTOC) \
+ 		-I $(VENDOR_PROTO_PATH) \
+		-I $(CURDIR) \
+		--openapiv2_out=$(OPENAPI_PATH) \
+		--openapiv2_opt logtostderr=true \
+		api/proto/$(API_VERSION)/$(SERVICE_NAME)/service.proto
+
+	mv $(OPENAPI_PATH)/api/proto/$(API_VERSION)/$(SERVICE_NAME)/*.json $(OPENAPI_PATH)
+	rm -r $(OPENAPI_PATH)/api
 
 # Run go mod tidy to clean up go.mod and go.sum
 .tidy:

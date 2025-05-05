@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.6
 // 	protoc        v3.12.4
-// source: service.proto
+// source: api/proto/v1/chat/service.proto
 
 package chat
 
@@ -22,26 +22,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-var File_service_proto protoreflect.FileDescriptor
+var File_api_proto_v1_chat_service_proto protoreflect.FileDescriptor
 
-const file_service_proto_rawDesc = "" +
+const file_api_proto_v1_chat_service_proto_rawDesc = "" +
 	"\n" +
-	"\rservice.proto\x12)github.com.nazarovnick.chat_platform.chat\x1a\x0emessages.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xe0\x02\n" +
+	"\x1fapi/proto/v1/chat/service.proto\x12)github.com.nazarovnick.chat_platform.chat\x1a api/proto/v1/chat/messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xe0\x02\n" +
 	"\vChatService\x12\xa6\x01\n" +
 	"\vSendMessage\x12=.github.com.nazarovnick.chat_platform.chat.SendMessageRequest\x1a>.github.com.nazarovnick.chat_platform.chat.SendMessageResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/v1/chat/send\x12\xa7\x01\n" +
-	"\vGetMessages\x12=.github.com.nazarovnick.chat_platform.chat.GetMessagesRequest\x1a>.github.com.nazarovnick.chat_platform.chat.GetMessagesResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/chat/messagesB\xb5\x02\x92A\x99\x02\x12\xc7\x01\n" +
-	"\fChat service\"X\n" +
-	"\x14gRPC-Gateway project\x12.https://github.com/grpc-ecosystem/grpc-gateway\x1a\x10none@example.com*X\n" +
-	"\x14BSD 3-Clause License\x12@https://github.com/grpc-ecosystem/grpc-gateway/blob/main/LICENSE2\x031.0*\x02\x01\x02rI\n" +
-	"\x17More about gRPC-Gateway\x12.https://github.com/grpc-ecosystem/grpc-gatewayZ\x16pkg/api/grpc/chat;chatb\x06proto3"
+	"\vGetMessages\x12=.github.com.nazarovnick.chat_platform.chat.GetMessagesRequest\x1a>.github.com.nazarovnick.chat_platform.chat.GetMessagesResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/chat/messagesB\xd4\x03\x92A\xc4\x03\x12\xbd\x02\n" +
+	"\x10Chat Service API\x12\xb8\x01API для работы с чатом, включая отправку сообщений, получение списка сообщений и управление диалогами\"3\n" +
+	"\x11Chat Service Team\x12\x1ehttps://github.com/nazarovnick*2\n" +
+	"\vMIT License\x12#https://opensource.org/licenses/MIT2\x051.0.0*\x02\x01\x02r~\n" +
+	"@Полная документация и исходный код\x12:https://github.com/nazarovnick/chat-platform/services/chatZ\n" +
+	"/chat;chatb\x06proto3"
 
-var file_service_proto_goTypes = []any{
+var file_api_proto_v1_chat_service_proto_goTypes = []any{
 	(*SendMessageRequest)(nil),  // 0: github.com.nazarovnick.chat_platform.chat.SendMessageRequest
 	(*GetMessagesRequest)(nil),  // 1: github.com.nazarovnick.chat_platform.chat.GetMessagesRequest
 	(*SendMessageResponse)(nil), // 2: github.com.nazarovnick.chat_platform.chat.SendMessageResponse
 	(*GetMessagesResponse)(nil), // 3: github.com.nazarovnick.chat_platform.chat.GetMessagesResponse
 }
-var file_service_proto_depIdxs = []int32{
+var file_api_proto_v1_chat_service_proto_depIdxs = []int32{
 	0, // 0: github.com.nazarovnick.chat_platform.chat.ChatService.SendMessage:input_type -> github.com.nazarovnick.chat_platform.chat.SendMessageRequest
 	1, // 1: github.com.nazarovnick.chat_platform.chat.ChatService.GetMessages:input_type -> github.com.nazarovnick.chat_platform.chat.GetMessagesRequest
 	2, // 2: github.com.nazarovnick.chat_platform.chat.ChatService.SendMessage:output_type -> github.com.nazarovnick.chat_platform.chat.SendMessageResponse
@@ -53,26 +54,26 @@ var file_service_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_service_proto_init() }
-func file_service_proto_init() {
-	if File_service_proto != nil {
+func init() { file_api_proto_v1_chat_service_proto_init() }
+func file_api_proto_v1_chat_service_proto_init() {
+	if File_api_proto_v1_chat_service_proto != nil {
 		return
 	}
-	file_messages_proto_init()
+	file_api_proto_v1_chat_messages_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_service_proto_rawDesc), len(file_service_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_proto_v1_chat_service_proto_rawDesc), len(file_api_proto_v1_chat_service_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_service_proto_goTypes,
-		DependencyIndexes: file_service_proto_depIdxs,
+		GoTypes:           file_api_proto_v1_chat_service_proto_goTypes,
+		DependencyIndexes: file_api_proto_v1_chat_service_proto_depIdxs,
 	}.Build()
-	File_service_proto = out.File
-	file_service_proto_goTypes = nil
-	file_service_proto_depIdxs = nil
+	File_api_proto_v1_chat_service_proto = out.File
+	file_api_proto_v1_chat_service_proto_goTypes = nil
+	file_api_proto_v1_chat_service_proto_depIdxs = nil
 }
