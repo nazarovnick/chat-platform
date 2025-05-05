@@ -1,0 +1,288 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.friendship;
+
+import "api/proto/v1/friendship/enums.proto";
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/friendship/v1;v1";
+
+// SendFriendRequest represents a request to send a friend invitation
+message SendFriendRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SendFriendRequest"
+      description: "Запрос на отправку заявки в друзья"
+      required: [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+      example:
+        "{"
+        "\"user_uuid\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\", "
+        "\"target_user_uuid\": \"ba9f62de-2fa9-4ac3-87a2-123456789abc\""
+        "}"
+    }
+  };
+
+  // user_uuid is the UUID of the user who is sending the friend request
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID отправителя"
+      description:
+        "UUID пользователя, который отправляет запрос "
+        "на добавление в друзья"
+    }
+  ];
+
+  // target_user_uuid is the UUID of the user to whom
+  // the friend request is being sent
+  string target_user_uuid = 2 [
+    json_name = "target_user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID получателя"
+      description:
+        "UUID пользователя, которому отправляется запрос "
+        "на добавление в друзья"
+    }
+  ];
+}
+
+// SendFriendResponse contains the result of sending a friend invitation
+message SendFriendResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SendFriendResponse"
+      description: "Ответ на попытку отправки заявки в друзья"
+      required: ["status"]
+      example:
+        "{"
+        "\"status\": \"FRIEND_REQUEST_STATUS_UNSPECIFIED\""
+        "}"
+    }
+  };
+
+  // status indicates the result of the friend request operation (enum)
+  FriendRequestStatus status = 1 [
+    json_name = "status",
+    (buf.validate.field).enum = {defined_only: true}
+  ];
+}
+
+// AcceptFriendRequest represents a request to accept an incoming friend request
+message AcceptFriendRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "AcceptFriendRequest"
+      description: "Запрос на принятие входящей заявки в друзья"
+      required: [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+      example:
+        "{"
+        "\"user_uuid\": \"b72f8c58-67a3-4a8b-a4f5-c3de47812ab1\", "
+        "\"target_user_uuid\": \"8e39eaf7-34f6-4b0e-ae3d-b54c3db4ee64\""
+        "}"
+    }
+  };
+
+  // user_uuid is the UUID of the user who accepts the incoming friend request
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+
+  // target_user_uuid is the UUID of the user who originally
+  // sent the friend request
+  string target_user_uuid = 2 [
+    json_name = "target_user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+}
+
+// AcceptFriendResponse contains the result of accepting a friend request
+message AcceptFriendResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "AcceptFriendResponse"
+      description: "Ответ на попытку подтверждения заявки в друзья"
+      required: ["status"]
+      example:
+        "{"
+        "\"status\": \"ACCEPT_FRIEND_STATUS_UNSPECIFIED\""
+        "}"
+    }
+  };
+
+  // status indicates the result of the friend request
+  // acceptance operation (enum)
+  AcceptFriendStatus status = 1 [
+    json_name = "status",
+    (buf.validate.field).enum = {defined_only: true}
+  ];
+}
+
+// DeclineFriendRequest represents a request to decline
+// an incoming friend request
+message DeclineFriendRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DeclineFriendRequest"
+      description: "Запрос на отклонение входящей заявки в друзья"
+      required: [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+      example:
+        "{"
+        "\"user_uuid\": \"56fc9f5e-0282-4a44-8a45-d3b479083e1a\", "
+        "\"target_user_uuid\": \"4e9e1df8-c158-420a-abc1-0123456789ab\""
+        "}"
+    }
+  };
+
+  // user_uuid is the UUID of the user who is declining
+  // the incoming friend request
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+
+  // target_user_uuid is the UUID of the user who originally
+  // sent the friend request
+  string target_user_uuid = 2 [
+    json_name = "target_user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+}
+
+// DeclineFriendResponse contains the result of declining a friend request
+message DeclineFriendResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DeclineFriendResponse"
+      description: "Ответ на отклонение заявки в друзья"
+      required: ["status"]
+      example:
+        "{"
+        "\"status\": \"DECLINE_FRIEND_STATUS_UNSPECIFIED\""
+        "}"
+    }
+  };
+
+  // status indicates the result of the decline operation (enum)
+  DeclineFriendStatus status = 1 [
+    json_name = "status",
+    (buf.validate.field).enum = {defined_only: true}
+  ];
+}
+
+// RemoveFriendRequest represents a request to remove an existing friend
+message RemoveFriendRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "RemoveFriendRequest"
+      description: "Запрос на удаление пользователя из списка друзей"
+      required: [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+      example:
+        "{"
+        "\"user_uuid\": \"2a1f6fce-5f92-4d2d-bf56-32f3a4b89129\", "
+        "\"target_user_uuid\": \"72d98fd2-3f9a-44e7-8d72-dff94391a1c1\""
+        "}"
+    }
+  };
+
+  // user_uuid is the UUID of the user who initiates the removal
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+
+  // target_user_uuid is the UUID of the friend being removed
+  string target_user_uuid = 2 [
+    json_name = "target_user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+}
+
+// RemoveFriendResponse contains the result of removing a friend
+message RemoveFriendResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      //      title: "RemoveFriendResponse"
+      description: "Ответ на попытку удаления друга"
+      required: ["status"]
+      example:
+        "{"
+        "\"status\": \"REMOVE_FRIEND_STATUS_UNSPECIFIED\""
+        "}"
+    }
+  };
+
+  // status indicates the result of the removal operation (enum)
+  RemoveFriendStatus status = 1 [
+    json_name = "status",
+    (buf.validate.field).enum = {defined_only: true}
+  ];
+}
+
+// GetFriendsRequest represents a request to retrieve a user's friend list
+message GetFriendsRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetFriendsRequest"
+      description:
+        "Запрос на получение списка идентификаторов друзей "
+        "пользователя"
+      required: ["user_uuid"]
+      example:
+        "{"
+        "\"user_uuid\": \"5e2d1c4e-3a84-4ec2-901f-9939c8737d7b\""
+        "}"
+    }
+  };
+
+  // user_uuid is the UUID of the user whose friends are being requested
+  string user_uuid = 1 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true
+  ];
+}
+
+// GetFriendsResponse contains a list of friend user IDs
+message GetFriendsResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetFriendsResponse"
+      description: "Ответ, содержащий список UUID-друзей пользователя"
+      example:
+        "{"
+        "\"friend_uuids\": ["
+        "\"1a2b3c4d-5678-1234-abcd-1234567890ab\", "
+        "\"9f8e7d6c-4321-5678-abcd-0987654321ff\""
+        "]"
+        "}"
+    }
+  };
+
+  // friend_ids is a list of UUIDs representing the user's friends
+  repeated string friend_uuids = 1 [json_name = "friend_uuids"];
+}

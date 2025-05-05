@@ -1,0 +1,286 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.chat;
+
+import "api/proto/v1/chat/enums.proto";
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/wrappers.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/chat;chat";
+
+// Message represents a chat message.
+message Message {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "Message"
+      description: "Модель сообщения"
+      example:
+        "{\n"
+        "  \"uuid\": \"67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1\",\n"
+        "  \"chat_id\": 101,\n"
+        "  \"user_uuid\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\",\n"
+        "  \"content\": \"Hello, world!\",\n"
+        "  \"timestamp\": 1714998600\n"
+        "}"
+    }
+  };
+
+  // Unique identifier of the message.
+  string uuid = 1 [
+    json_name = "uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID сообщения"
+      description: "Уникальный идентификатор сообщения"
+    }
+  ];
+
+  // Chat ID where the message was sent.
+  uint32 chat_id = 2 [
+    json_name = "chat_id",
+    (buf.validate.field).uint32.gt = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "ID чата"
+      description:
+        "Целочисленный идентификатор чата, в который "
+        "отправлено сообщение"
+    }
+  ];
+
+  // User UUID who sent the message.
+  string user_uuid = 3 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID пользователя"
+      description:
+        "Уникальный идентификатор пользователя, "
+        "отправившего сообщение"
+    }
+  ];
+
+  // Content of the message.
+  string content = 4 [
+    json_name = "content",
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 2000,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Содержимое"
+      description: "Текстовое содержимое сообщения (от 1 до 2000 символов)"
+    }
+  ];
+
+  // Timestamp when the message was sent (Unix time).
+  uint32 timestamp = 5 [
+    json_name = "timestamp",
+    (buf.validate.field).uint32.gt = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Метка времени"
+      description: "Время отправки сообщения в формате Unix Timestamp"
+    }
+  ];
+}
+
+// Request to send a new message.
+message SendMessageRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SendMessageRequest"
+      description: "Запрос на отправку нового сообщения"
+      required: [
+        "chat_id",
+        "user_uuid",
+        "content"
+      ]
+      example:
+        "{\n"
+        "  \"chat_id\": 102,\n"
+        "  \"user_uuid\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\",\n"
+        "  \"content\": \"Hello, how are you?\"\n"
+        "}"
+    }
+  };
+
+  // ID of the chat to send the message to.
+  uint32 chat_id = 1 [
+    json_name = "chat_id",
+    (buf.validate.field).uint32.gt = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "ID чата"
+      description:
+        "Целочисленный идентификатор чата, в который "
+        "отправлено сообщение"
+    }
+  ];
+
+  // UUID of the user sending the message.
+  string user_uuid = 2 [
+    json_name = "user_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID"
+      description:
+        "Уникальный идентификатор пользователя "
+        "отправляющего сообщение"
+    }
+  ];
+
+  // Content of the message.
+  string content = 3 [
+    json_name = "content",
+    (buf.validate.field).string.min_len = 1,
+    (buf.validate.field).string.max_len = 2000,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Содержимое"
+      description: "Текстовое содержимое сообщения (от 1 до 2000 символов)"
+    }
+  ];
+}
+
+// Response after a message is successfully sent.
+message SendMessageResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "SendMessageResponse"
+      description: "Ответ, содержащий UUID только что отправленного сообщения"
+      required: ["message_uuid"]
+      example:
+        "{\n"
+        "  \"message_uuid\": \"67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1\"\n"
+        "}"
+    }
+  };
+
+  // UUID of the newly created message.
+  string message_uuid = 1 [
+    json_name = "message_uuid",
+    (buf.validate.field).string.uuid = true,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "UUID сообщения"
+      description: "Уникальный идентификатор сообщения"
+    }
+  ];
+}
+
+// Request to get all messages for a chat.
+message GetMessagesRequest {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetMessagesRequest"
+      description:
+        "Запрос на получение сообщений из чата с поддержкой пагинации и "
+        "фильтрации по времени"
+      required: ["chat_id"]
+      example:
+        "{\n"
+        "  \"chat_id\": 102,\n"
+        "  \"limit\": 20,\n"
+        "  \"offset\": 0,\n"
+        "  \"timestamp\": 1714998600,\n"
+        "  \"timestamp_filter\": \"TIME_FILTER_DIRECTION_AFTER\"\n"
+        "}"
+    }
+  };
+
+  // ID of the chat to retrieve messages from.
+  uint32 chat_id = 1 [
+    json_name = "chat_id",
+    (buf.validate.field).uint32.gt = 0,
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "ID чата"
+      description:
+        "Целочисленный идентификатор чата, из которого "
+        "извлекаются сообщения"
+    }
+  ];
+
+  // Optional limit on the number of messages returned.
+  google.protobuf.UInt32Value limit = 2 [
+    json_name = "limit",
+    (buf.validate.field).required = false,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Лимит"
+      description: "Максимальное количество возвращаемых сообщений"
+    }
+  ];
+
+  // Optional offset for pagination.
+  google.protobuf.UInt32Value offset = 3 [
+    json_name = "offset",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Смещение"
+      description: "Количество сообщений, которые нужно пропустить"
+    }
+  ];
+
+  // Optional timestamp to filter messages.
+  google.protobuf.UInt64Value timestamp = 4 [
+    json_name = "timestamp",
+    (buf.validate.field).required = false,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Метка времени"
+      description: "Фильтрация сообщений по времени (Unix-время в секундах)"
+    }
+  ];
+
+  TimeFilterDirection timestamp_filter = 5 [
+    json_name = "timestamp_filter",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Направление фильтрации по времени"
+      description:
+        "Определяет, искать сообщения ДО или ПОСЛЕ "
+        "указанного времени"
+    }
+  ];
+}
+
+// Response with a list of messages.
+message GetMessagesResponse {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetMessagesResponse"
+      description: "Ответ, содержащий список сообщений чата"
+      example:
+        "{\n"
+        "  \"messages\": [\n"
+        "    {\n"
+        "      \"uuid\": \"67f3c9a0-b0a2-4ae8-bc52-ff3f4b02e8a1\",\n"
+        "      \"chat_id\": 102,\n"
+        "      \"user_uuid\": \"d290f1ee-6c54-4b01-90e6-d701748f0851\",\n"
+        "      \"content\": \"Hello!\",\n"
+        "      \"timestamp\": 1714998600\n"
+        "    },\n"
+        "    {\n"
+        "      \"uuid\": \"a2b3c4d5-6e7f-8a9b-c0d1-e2f3a4b5c6d7\",\n"
+        "      \"chat_id\": 102,\n"
+        "      \"user_uuid\": \"c1d2e3f4-5678-9abc-def0-1234567890ab\",\n"
+        "      \"content\": \"Hi there!\",\n"
+        "      \"timestamp\": 1714998660\n"
+        "    }\n"
+        "  ]\n"
+        "}"
+    }
+  };
+
+  // List of messages.
+  repeated Message messages = 1 [
+    json_name = "messages",
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Сообщения"
+      description: "Список сообщений, полученных из указанного чата"
+    }
+  ];
+}

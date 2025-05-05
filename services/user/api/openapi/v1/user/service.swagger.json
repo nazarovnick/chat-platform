@@ -1,0 +1,504 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "User Service API",
+    "description": "API для управления пользователями, включая создание, обновление, поиск по никнейму и получение профиля.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "User Service Team",
+      "url": "https://github.com/nazarovnick"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "tags": [
+    {
+      "name": "UserService"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/users/by-nickname/{nickname}": {
+      "get": {
+        "summary": "Retrieves user information by nickname",
+        "operationId": "UserService_GetUserByNickname",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userGetUserByNicknameResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nickname",
+            "description": "Уникальное имя пользователя, отображаемое публично",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
+    "/api/v1/users/search": {
+      "get": {
+        "summary": "Searches users by a partial nickname match",
+        "operationId": "UserService_SearchUsersByNickname",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userSearchUsersByNicknameResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "query",
+            "description": "Поисковый запрос\n\nЧасть никнейма, по которому осуществляется поиск пользователей",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "Ограничение количества\n\nМаксимальное количество пользователей в ответе (по умолчанию 10)",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "description": "Смещение\n\nКоличество записей, которые нужно пропустить (для пагинации)",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
+    "/api/v1/users/update": {
+      "patch": {
+        "summary": "Updates user profile data",
+        "operationId": "UserService_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Запрос на обновление профиля пользователя.\nПозволяет изменить один или несколько полей профиля: никнейм, дату рождения, аватар и статус мягкого удаления.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userUpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    },
+    "/api/v1/users/{user_uuid}": {
+      "get": {
+        "summary": "Retrieves user information by UUID",
+        "operationId": "UserService_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/userGetUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_uuid",
+            "description": "UUID пользователя, по которому необходимо получить информацию",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "UserService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "userGetUserByNicknameResponse": {
+      "type": "object",
+      "example": {
+        "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
+        "nickname": "vasyan888",
+        "age": 30,
+        "birth_date": "1993-05-21T00:00:00Z",
+        "avatar_url": "https://kakoi-to-sait.com/avatar.png",
+        "created_at": "2024-01-01T10:00:00Z",
+        "soft_deleted": false
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя",
+          "title": "UUID"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Уникальное имя пользователя, отображаемое публично",
+          "title": "Никнейм"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Целое число, указывающее возраст пользователя в годах",
+          "title": "Возраст пользователя"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата рождения пользователя",
+          "title": "Дата рождения пользователя"
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "URL-адрес изображения профиля пользователя",
+          "title": "Ссылка на аватар"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания профиля пользователя",
+          "title": "Дата создания пользователя"
+        },
+        "soft_deleted": {
+          "type": "boolean",
+          "description": "Если true — пользователь считается удалённым, но физически остаётся в системе",
+          "title": "Флаг мягкого удаления"
+        }
+      },
+      "description": "Ответ на запрос о получении информации о пользователе по никнейму",
+      "title": "GetUserByNicknameResponse"
+    },
+    "userGetUserResponse": {
+      "type": "object",
+      "example": {
+        "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
+        "nickname": "vasyan888",
+        "age": 30,
+        "birth_date": "1993-05-21T00:00:00Z",
+        "avatar_url": "https://kakoi-to-sait.com/avatar.png",
+        "created_at": "2024-01-01T10:00:00Z",
+        "soft_deleted": false
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя",
+          "title": "UUID"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Уникальное имя пользователя, отображаемое публично",
+          "title": "Никнейм"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Целое число, указывающее возраст пользователя в годах",
+          "title": "Возраст пользователя"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата рождения пользователя",
+          "title": "Дата рождения пользователя"
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "URL-адрес изображения профиля пользователя",
+          "title": "Ссылка на аватар"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания профиля пользователя",
+          "title": "Дата создания пользователя"
+        },
+        "soft_deleted": {
+          "type": "boolean",
+          "description": "Если true — пользователь считается удалённым, но физически остаётся в системе",
+          "title": "Флаг мягкого удаления"
+        }
+      },
+      "description": "Ответ на запрос о получении информации о пользователе",
+      "title": "GetUserResponse"
+    },
+    "userSearchUsersByNicknameResponse": {
+      "type": "object",
+      "example": {
+        "users": [
+          {
+            "user_uuid": "11111111-1111-1111-1111-111111111111",
+            "nickname": "vasyan1",
+            "age": 27,
+            "birth_date": "1996-08-15T00:00:00Z",
+            "avatar_url": "https://example.com/avatar1.png",
+            "created_at": "2023-01-01T12:00:00Z",
+            "soft_deleted": false
+          },
+          {
+            "user_uuid": "22222222-2222-2222-2222-222222222222",
+            "nickname": "vasyan2",
+            "age": 31,
+            "birth_date": "1993-04-12T00:00:00Z",
+            "avatar_url": "https://example.com/avatar2.png",
+            "created_at": "2022-06-10T10:30:00Z",
+            "soft_deleted": false
+          }
+        ]
+      },
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/userUser"
+          },
+          "description": "Результат поиска — пользователи, соответствующие запросу",
+          "title": "Список пользователей"
+        }
+      },
+      "description": "Ответ на запрос поиска пользователей по части никнейма",
+      "title": "SearchUsersByNicknameResponse"
+    },
+    "userUpdateUserRequest": {
+      "type": "object",
+      "example": {
+        "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
+        "nickname": "SuperVasyan888"
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя",
+          "title": "UUID"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Уникальное имя пользователя, отображаемое публично",
+          "title": "Никнейм"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата рождения пользователя",
+          "title": "Дата рождения пользователя"
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "URL-адрес изображения профиля пользователя",
+          "title": "Ссылка на аватар"
+        },
+        "soft_deleted": {
+          "type": "boolean",
+          "description": "Если true — пользователь считается удалённым, но физически остаётся в системе",
+          "title": "Флаг мягкого удаления"
+        }
+      },
+      "description": "Запрос на обновление профиля пользователя.\nПозволяет изменить один или несколько полей профиля: никнейм, дату рождения, аватар и статус мягкого удаления.",
+      "title": "UpdateUserRequest"
+    },
+    "userUpdateUserResponse": {
+      "type": "object",
+      "example": {
+        "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
+        "nickname": "SuperVasyan888",
+        "age": 30,
+        "birth_date": "1993-05-21T00:00:00Z",
+        "avatar_url": "https://kakoi-to-sait.com/avatar.png",
+        "created_at": "2024-01-01T10:00:00Z",
+        "soft_deleted": false
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя",
+          "title": "UUID"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Уникальное имя пользователя, отображаемое публично",
+          "title": "Никнейм"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Целое число, указывающее возраст пользователя в годах",
+          "title": "Возраст пользователя"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата рождения пользователя",
+          "title": "Дата рождения пользователя"
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "URL-адрес изображения профиля пользователя",
+          "title": "Ссылка на аватар"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания профиля пользователя",
+          "title": "Дата создания пользователя"
+        },
+        "soft_deleted": {
+          "type": "boolean",
+          "description": "Если true — пользователь считается удалённым, но физически остаётся в системе",
+          "title": "Флаг мягкого удаления"
+        }
+      },
+      "description": "Ответ на запрос обновления профиля пользователя",
+      "title": "UpdateUserResponse"
+    },
+    "userUser": {
+      "type": "object",
+      "example": {
+        "user_uuid": "123e4567-e89b-12d3-a456-426614174000",
+        "nickname": "vasyan888",
+        "age": 30,
+        "birth_date": "1993-05-21T00:00:00Z",
+        "avatar_url": "https://kakoi-to-sait.com/avatar.png",
+        "created_at": "2024-01-01T10:00:00Z",
+        "soft_deleted": false
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "Уникальный идентификатор пользователя",
+          "title": "UUID"
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Уникальное имя пользователя, отображаемое публично",
+          "title": "Никнейм"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Целое число, указывающее возраст пользователя в годах",
+          "title": "Возраст пользователя"
+        },
+        "birth_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата рождения пользователя",
+          "title": "Дата рождения пользователя"
+        },
+        "avatar_url": {
+          "type": "string",
+          "description": "URL-адрес изображения профиля пользователя",
+          "title": "Ссылка на аватар"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Дата создания профиля пользователя",
+          "title": "Дата создания пользователя"
+        },
+        "soft_deleted": {
+          "type": "boolean",
+          "description": "Если true — пользователь считается удалённым, но физически остаётся в системе",
+          "title": "Флаг мягкого удаления"
+        }
+      },
+      "description": "Модель пользователя, содержащая основные сведения о нём",
+      "title": "User"
+    }
+  },
+  "externalDocs": {
+    "description": "Полная документация и исходный код",
+    "url": "https://github.com/nazarovnick/chat-platform/services/user"
+  }
+}
