@@ -1,0 +1,4 @@
+*.pb.go linguist-generated
+*.pb.gw.go linguist-generated
+*.pb.grpc.go linguist-generated
+*.swagger.json linguist-generated
