@@ -26,7 +26,8 @@ func RegisterHealthRoutes(router fiber.Router) {
 // @Router       /healthz/liveness [get]
 func LivenessHandler(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(dto.HealthResponse{
-		Status: "alive"},
+		Status: "alive",
+	},
 	)
 }
 
