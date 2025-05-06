@@ -65,21 +65,13 @@ func (u *User) IsBlocked() bool { return u.isBlocked }
 func (u *User) CreatedAt() time.Time { return u.createdAt }
 
 // SetPasswordHash sets the user's password hash. Setter.
-func (u *User) SerPasswordHash(hash PasswordHash) {
-	u.passwordHash = hash
-}
+func (u *User) SerPasswordHash(hash PasswordHash) { u.passwordHash = hash }
 
 // Block marks the user as blocked. Setter.
-func (u *User) Block() {
-	u.isBlocked = true
-}
+func (u *User) Block() { u.isBlocked = true }
 
 // Unblock marks the user as not blocked. Setter.
-func (u *User) Unblock() {
-	u.isBlocked = false
-}
+func (u *User) Unblock() { u.isBlocked = false }
 
 // SetLogin sets the user's login. Setter.
-func (u *User) SetLogin(login Login) {
-	u.login = login
-}
+func (u *User) SetLogin(login Login) { u.login = login }
