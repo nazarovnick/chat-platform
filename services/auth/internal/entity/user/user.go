@@ -13,6 +13,14 @@ func NewUserID() UserID {
 	return UserID(uuid.New())
 }
 
+// Validate checks if the UserID is non-empty.
+func (id UserID) Validate() error {
+	if id.String() == "" {
+		return ErrEmptyUserID
+	}
+	return nil
+}
+
 // String returns the string representation of the UserID.
 func (id UserID) String() string {
 	return uuid.UUID(id).String()
@@ -23,6 +31,7 @@ type User struct {
 	id           UserID
 	login        Login
 	passwordHash PasswordHash
+	role         Role
 	isBlocked    bool
 	createdAt    time.Time
 }
@@ -33,17 +42,18 @@ func NewUser(
 	id UserID,
 	login Login,
 	passwordHash PasswordHash,
+	role Role,
 	isBlocked bool,
 	createdAt time.Time,
 ) *User {
 	if createdAt.IsZero() {
 		createdAt = time.Now()
 	}
-
 	return &User{
 		id:           id,
 		login:        login,
 		passwordHash: passwordHash,
+		role:         role,
 		isBlocked:    isBlocked,
 		createdAt:    createdAt,
 	}

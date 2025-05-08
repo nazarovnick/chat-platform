@@ -10,4 +10,10 @@ var (
 
 	// PasswordHash errors
 	ErrEmptyPasswordHash = errors.New("user: password hash cannot be empty")
+
+	// Role errors
+	ErrInvalidRole = errors.New("invalid role")
+
+	// UserID errors
+	ErrEmptyUserID = errors.New("user: user id cannot be empty")
 )
