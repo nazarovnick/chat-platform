@@ -8,6 +8,6 @@ var (
 	ErrInvalidLoginLength = errors.New("user: login must be 3-64 characters")
 	ErrInvalidLoginFormat = errors.New("user: login must contain only a-z, A-Z, 0-9, _")
 
-	// Password hash errors
+	// PasswordHash errors
 	ErrEmptyPasswordHash = errors.New("user: password hash cannot be empty")
 )
