@@ -15,5 +15,6 @@ var (
 	ErrInvalidRole = errors.New("invalid role")
 
 	// UserID errors
-	ErrEmptyUserID = errors.New("user: user id cannot be empty")
+	ErrEmptyUserID   = errors.New("user: ID cannot be empty")
+	ErrInvalidUserID = errors.New("user: ID is invalid")
 )

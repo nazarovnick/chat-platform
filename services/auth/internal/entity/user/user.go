@@ -13,9 +13,13 @@ func NewUserID() UserID {
 	return UserID(uuid.New())
 }
 
-// Validate checks if the UserID is non-empty.
+// Validate checks whether the UserID is valid and non-zero.
 func (id UserID) Validate() error {
-	if id.String() == "" {
+	_, err := uuid.Parse(id.String())
+	if err != nil {
+		return ErrInvalidUserID
+	}
+	if uuid.UUID(id) == uuid.Nil {
 		return ErrEmptyUserID
 	}
 	return nil

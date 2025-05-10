@@ -16,16 +16,16 @@ type AccessTokenClaims struct {
 // NewAccessTokenClaims creates and validates a new access token claims object.
 func NewAccessTokenClaims(userID user.UserID, role user.Role, ttl time.Duration) (*AccessTokenClaims, error) {
 	now := time.Now().UTC()
-	token := &AccessTokenClaims{
+	c := &AccessTokenClaims{
 		userID:    userID,
 		role:      role,
 		createdAt: now,
 		expiresAt: now.Add(ttl),
 	}
-	if err := token.Validate(); err != nil {
+	if err := c.Validate(); err != nil {
 		return nil, err
 	}
-	return token, nil
+	return c, nil
 }
 
 // Validate checks if the claims fields are valid.
@@ -35,6 +35,9 @@ func (c *AccessTokenClaims) Validate() error {
 	}
 	if err := c.role.Validate(); err != nil {
 		return err
+	}
+	if c.expiresAt.IsZero() || c.createdAt.IsZero() {
+		return ErrInvalidTokenTimestamps
 	}
 	return nil
 }
