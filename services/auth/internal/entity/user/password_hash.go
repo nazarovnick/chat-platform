@@ -1,5 +1,11 @@
 package user
 
+// PasswordVerifier defines an interface for verifying a plain-text password
+// against a stored hash.
+type PasswordVerifier interface {
+	Verify(storedHash string, inputPassword string) error
+}
+
 // PasswordHash represents a hashed user password.
 type PasswordHash string
 

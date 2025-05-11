@@ -6,6 +6,24 @@ import (
 	"time"
 )
 
+// RefreshToken represents a long-lived token used to renew sessions.
+type RefreshToken string
+
+// NewRefreshToken creates a new RefreshToken from a raw string.
+func NewRefreshToken(value string) RefreshToken {
+	return RefreshToken(value)
+}
+
+// String hides the token value from fmt.Print and %v.
+func (t RefreshToken) String() string {
+	return "[HIDDEN]"
+}
+
+// GoString hides the token value from %#v.
+func (t RefreshToken) GoString() string {
+	return "RefreshToken([HIDDEN])"
+}
+
 // RefreshTokenClaims holds the payload data for a refresh token.
 type RefreshTokenClaims struct {
 	sessionID session.SessionID

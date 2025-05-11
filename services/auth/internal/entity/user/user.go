@@ -1,34 +1,9 @@
 package user
 
 import (
-	"github.com/google/uuid"
+	"fmt"
 	"time"
 )
-
-// UserID represents a unique identifier for a user.
-type UserID uuid.UUID
-
-// NewUserID generates a new UserID.
-func NewUserID() UserID {
-	return UserID(uuid.New())
-}
-
-// Validate checks whether the UserID is valid and non-zero.
-func (id UserID) Validate() error {
-	_, err := uuid.Parse(id.String())
-	if err != nil {
-		return ErrInvalidUserID
-	}
-	if uuid.UUID(id) == uuid.Nil {
-		return ErrEmptyUserID
-	}
-	return nil
-}
-
-// String returns the string representation of the UserID.
-func (id UserID) String() string {
-	return uuid.UUID(id).String()
-}
 
 // User represents a system user with authentication data.
 type User struct {
@@ -63,29 +38,37 @@ func NewUser(
 	}
 }
 
-// ID returns the user's ID. Getter.
+// ID returns the user's ID.
 func (u *User) ID() UserID { return u.id }
 
-// Login returns the user's login. Getter.
+// Login returns the user's login.
 func (u *User) Login() Login { return u.login }
 
-// PasswordHash returns the user's hashed password. Getter.
+// PasswordHash returns the user's hashed password.
 func (u *User) PasswordHash() PasswordHash { return u.passwordHash }
 
-// IsBlocked returns whether the user is blocked. Getter.
+// IsBlocked returns whether the user is blocked.
 func (u *User) IsBlocked() bool { return u.isBlocked }
 
-// CreatedAt returns the user's creation time. Getter.
+// CreatedAt returns the user's creation time.
 func (u *User) CreatedAt() time.Time { return u.createdAt }
 
-// SetPasswordHash sets the user's password hash. Setter.
-func (u *User) SerPasswordHash(hash PasswordHash) { u.passwordHash = hash }
+// SetPasswordHash sets the user's password hash.
+func (u *User) SetPasswordHash(hash PasswordHash) { u.passwordHash = hash }
 
-// Block marks the user as blocked. Setter.
+// Block marks the user as blocked.
 func (u *User) Block() { u.isBlocked = true }
 
-// Unblock marks the user as not blocked. Setter.
+// Unblock marks the user as not blocked.
 func (u *User) Unblock() { u.isBlocked = false }
 
-// SetLogin sets the user's login. Setter.
+// SetLogin sets the user's login.
 func (u *User) SetLogin(login Login) { u.login = login }
+
+// CheckPassword verifies the input password against the stored hash using the provided verifier.
+func (u *User) CheckPassword(inputPassword string, verifier PasswordVerifier) error {
+	if err := verifier.Verify(u.passwordHash.String(), inputPassword); err != nil {
+		return fmt.Errorf("%w: %v", ErrInvalidCredentials, err)
+	}
+	return nil
+}

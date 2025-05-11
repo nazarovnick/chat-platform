@@ -5,6 +5,24 @@ import (
 	"time"
 )
 
+// AccessToken represents a short-lived access token string.
+type AccessToken string
+
+// NewAccessToken creates a new AccessToken from a raw string.
+func NewAccessToken(value string) AccessToken {
+	return AccessToken(value)
+}
+
+// String hides the token value from fmt.Print and %v.
+func (t AccessToken) String() string {
+	return "[HIDDEN]"
+}
+
+// GoString hides the token value from %#v.
+func (t AccessToken) GoString() string {
+	return "AccessToken([HIDDEN])"
+}
+
 // AccessTokenClaims holds access token payload data.
 type AccessTokenClaims struct {
 	userID    user.UserID
