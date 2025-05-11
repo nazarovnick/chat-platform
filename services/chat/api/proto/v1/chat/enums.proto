@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.chat;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/chat;chat";
+
+// TimeFilterDirection defines whether to filter messages
+// BEFORE or AFTER the given timestamp.
+enum TimeFilterDirection {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+    title: "ENUM: TimeFilterDirection"
+    description:
+        "EN:\n"
+            "Specifies how to filter messages based on the provided timestamp."
+            "\n\n"
+            "1.) TIME_FILTER_DIRECTION_UNSPECIFIED: "
+            "No direction specified"
+            "\n"
+            "2.) TIME_FILTER_DIRECTION_BEFORE: "
+            "Filter messages sent before the timestamp"
+            "\n"
+            "3.) TIME_FILTER_DIRECTION_AFTER: "
+            "Filter messages sent after the timestamp"
+            "\n\n\n"
+            "RU:\n"
+            "Определяет способ фильтрации сообщений по времени."
+            "\n\n"
+            "1.) TIME_FILTER_DIRECTION_UNSPECIFIED: "
+            "Направление фильтрации не указано"
+            "\n"
+            "2.) TIME_FILTER_DIRECTION_BEFORE: "
+            "Фильтрация сообщений, отправленных до указанного времени"
+            "\n"
+            "3.) TIME_FILTER_DIRECTION_AFTER: "
+            "Фильтрация сообщений, отправленных после указанного времени"
+            "\n"
+  };
+
+  // No direction specified
+  TIME_FILTER_DIRECTION_UNSPECIFIED = 0;
+
+  // Filter messages sent before the timestamp
+  TIME_FILTER_DIRECTION_BEFORE = 1;
+
+  // Filter messages sent after the timestamp
+  TIME_FILTER_DIRECTION_AFTER = 2;
+}

@@ -1,0 +1,297 @@
+syntax = "proto3";
+
+package github.com.nazarovnick.chat_platform.friendship;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "/friendship/v1;v1";
+
+enum FriendRequestStatus {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+    title: "ENUM: FriendRequestStatus"
+    description:
+      "EN:\n"
+      "Represents the result of sending a friend request."
+      "\n\n"
+      "1.) FRIEND_REQUEST_STATUS_UNSPECIFIED: "
+      "Default unspecified status"
+      "\n"
+      "2.) FRIEND_REQUEST_STATUS_ALREADY_FRIENDS: "
+      "Users are already friends"
+      "\n"
+      "3.) FRIEND_REQUEST_STATUS_BLOCKED: "
+      "The sender is blocked by the recipient"
+      "\n"
+      "4.) FRIEND_REQUEST_STATUS_SUCCESS: "
+      "Request was successfully sent"
+      "\n"
+      "5.) FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS: "
+      "Request already exists"
+      "\n"
+      "6.) FRIEND_REQUEST_STATUS_USER_NOT_FOUND: "
+      "Target user not found"
+      "\n"
+      "7.) FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED: "
+      "Cannot send request to self"
+      "\n\n\n"
+      "RU:\n"
+      "Представляет собой результат отправки запроса на"
+      "добавление в друзья."
+      "\n\n"
+      "1.) FRIEND_REQUEST_STATUS_UNSPECIFIED: "
+      "Статус по умолчанию не указан"
+      "\n"
+      "2.) FRIEND_REQUEST_STATUS_ALREADY_FRIENDS: "
+      "Пользователи уже друзья"
+      "\n"
+      "3.) FRIEND_REQUEST_STATUS_BLOCKED: "
+      "Отправитель заблокирован получателем"
+      "\n"
+      "4.) FRIEND_REQUEST_STATUS_SUCCESS: "
+      "Заявка успешно отправлена"
+      "\n"
+      "5.) FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS: "
+      "Заявка уже существует"
+      "\n"
+      "6.) FRIEND_REQUEST_STATUS_USER_NOT_FOUND: "
+      "Целевой пользователь не найден"
+      "\n"
+      "7.) FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED: "
+      "Нельзя отправить заявку самому себе"
+      "\n"
+  };
+
+  // Default unspecified status
+  FRIEND_REQUEST_STATUS_UNSPECIFIED = 0;
+
+  // Users are already friends
+  FRIEND_REQUEST_STATUS_ALREADY_FRIENDS = 1;
+
+  // The sender is blocked by the recipient
+  FRIEND_REQUEST_STATUS_BLOCKED = 2;
+
+  // Friend request was sent successfully
+  FRIEND_REQUEST_STATUS_SUCCESS = 3;
+
+  // A friend request already exists between the users
+  FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS = 4;
+
+  // The target user was not found
+  FRIEND_REQUEST_STATUS_USER_NOT_FOUND = 5;
+
+  // A user cannot send a friend request to themselves
+  FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED = 6;
+}
+
+// AcceptFriendStatus represents the result of accepting a friend request
+enum AcceptFriendStatus {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+    title: "ENUM: AcceptFriendStatus"
+    description:
+      "EN:\n"
+      "Represents the result of accepting a friend request."
+      "\n\n"
+      "1.) ACCEPT_FRIEND_STATUS_UNSPECIFIED: "
+      "Default unspecified status"
+      "\n"
+      "2.) ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS: "
+      "Users are already friends"
+      "\n"
+      "3.) ACCEPT_FRIEND_STATUS_BLOCKED: "
+      "The request cannot be accepted due to a block"
+      "\n"
+      "4.) ACCEPT_FRIEND_STATUS_SUCCESS: "
+      "Friend request was accepted successfully"
+      "\n"
+      "5.) ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND: "
+      "Friend request was not found"
+      "\n"
+      "6.) ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED: "
+      "Friend request was already accepted"
+      "\n"
+      "7.) ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED: "
+      "A user cannot accept their own friend request"
+      "\n\n\n"
+      "RU:\n"
+      "Представляет собой результат принятия запроса в друзья."
+      "\n\n"
+      "1.) ACCEPT_FRIEND_STATUS_UNSPECIFIED: "
+      "Статус по умолчанию, не указан"
+      "\n"
+      "2.) ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS: "
+      "Пользователи уже являются друзьями"
+      "\n"
+      "3.) ACCEPT_FRIEND_STATUS_BLOCKED: "
+      "Невозможно принять заявку из-за блокировки"
+      "\n"
+      "4.) ACCEPT_FRIEND_STATUS_SUCCESS: "
+      "Заявка успешно принята"
+      "\n"
+      "5.) ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND: "
+      "Заявка не найдена"
+      "\n"
+      "6.) ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED: "
+      "Заявка уже была принята ранее"
+      "\n"
+      "7.) ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED: "
+      "Нельзя принять свою собственную заявку"
+      "\n"
+  };
+
+  // Default unspecified status
+  ACCEPT_FRIEND_STATUS_UNSPECIFIED = 0;
+
+  // Users are already friends
+  ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS = 1;
+
+  // The request cannot be accepted due to a block
+  ACCEPT_FRIEND_STATUS_BLOCKED = 2;
+
+  // Friend request was accepted successfully
+  ACCEPT_FRIEND_STATUS_SUCCESS = 3;
+
+  // Friend request was not found
+  ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND = 4;
+
+  // Friend request was already accepted
+  ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED = 5;
+
+  // A user cannot accept their own friend request
+  ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED = 6;
+}
+
+// DeclineFriendStatus represents the result of declining a friend request
+enum DeclineFriendStatus {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+    title: "ENUM: DeclineFriendStatus"
+    description:
+      "EN:\n"
+      "Represents the result of declining a friend request."
+      "\n\n"
+      "1.) DECLINE_FRIEND_STATUS_UNSPECIFIED: "
+      "Default unspecified status"
+      "\n"
+      "2.) DECLINE_FRIEND_STATUS_ALREADY_FRIENDS: "
+      "Users are already friends"
+      "\n"
+      "3.) DECLINE_FRIEND_STATUS_SUCCESS: "
+      "Friend request was declined successfully"
+      "\n"
+      "4.) DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND: "
+      "Friend request was not found"
+      "\n"
+      "5.) DECLINE_FRIEND_STATUS_ALREADY_DECLINED: "
+      "Friend request was already declined"
+      "\n"
+      "6.) DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED: "
+      "A user cannot decline their own friend request"
+      "\n\n\n"
+      "RU:\n"
+      "Представляет собой результат отклонения запроса в друзья."
+      "\n\n"
+      "1.) DECLINE_FRIEND_STATUS_UNSPECIFIED: "
+      "Статус по умолчанию, не указан"
+      "\n"
+      "2.) DECLINE_FRIEND_STATUS_ALREADY_FRIENDS: "
+      "Пользователи уже являются друзьями"
+      "\n"
+      "3.) DECLINE_FRIEND_STATUS_SUCCESS: "
+      "Заявка успешно отклонена"
+      "\n"
+      "4.) DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND: "
+      "Заявка не найдена"
+      "\n"
+      "5.) DECLINE_FRIEND_STATUS_ALREADY_DECLINED: "
+      "Заявка уже была отклонена ранее"
+      "\n"
+      "6.) DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED: "
+      "Нельзя отклонить свою собственную заявку"
+      "\n"
+  };
+
+  // Default unspecified status
+  DECLINE_FRIEND_STATUS_UNSPECIFIED = 0;
+
+  // Users are already friends
+  DECLINE_FRIEND_STATUS_ALREADY_FRIENDS = 1;
+
+  // Friend request was declined successfully
+  DECLINE_FRIEND_STATUS_SUCCESS = 2;
+
+  // Friend request was not found
+  DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND = 3;
+
+  // Friend request was already declined
+  DECLINE_FRIEND_STATUS_ALREADY_DECLINED = 4;
+
+  // A user cannot decline their own friend request
+  DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED = 6;
+}
+
+// RemoveFriendStatus represents the result of removing a friend
+enum RemoveFriendStatus {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_enum) = {
+    title: "ENUM: RemoveFriendStatus"
+    description:
+      "EN:\n"
+      "Represents the result of removing a friend."
+      "\n\n"
+      "1.) REMOVE_FRIEND_STATUS_UNSPECIFIED: "
+      "Default unspecified status"
+      "\n"
+      "2.) REMOVE_FRIEND_STATUS_BLOCKED: "
+      "Removal is not allowed due to a block"
+      "\n"
+      "3.) REMOVE_FRIEND_STATUS_SUCCESS: "
+      "Friend was removed successfully"
+      "\n"
+      "4.) REMOVE_FRIEND_STATUS_NOT_FRIENDS: "
+      "The users are not friends"
+      "\n"
+      "5.) REMOVE_FRIEND_STATUS_USER_NOT_FOUND: "
+      "The target user was not found"
+      "\n"
+      "6.) REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED: "
+      "A user cannot remove themselves as a friend"
+      "\n\n\n"
+      "RU:\n"
+      "Представляет собой результат удаления пользователя из друзей."
+      "\n\n"
+      "1.) REMOVE_FRIEND_STATUS_UNSPECIFIED: "
+      "Статус по умолчанию, не указан"
+      "\n"
+      "2.) REMOVE_FRIEND_STATUS_BLOCKED: "
+      "Удаление невозможно из-за блокировки"
+      "\n"
+      "3.) REMOVE_FRIEND_STATUS_SUCCESS: "
+      "Друг был успешно удалён"
+      "\n"
+      "4.) REMOVE_FRIEND_STATUS_NOT_FRIENDS: "
+      "Пользователи не являются друзьями"
+      "\n"
+      "5.) REMOVE_FRIEND_STATUS_USER_NOT_FOUND: "
+      "Целевой пользователь не найден"
+      "\n"
+      "6.) REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED: "
+      "Нельзя удалить самого себя из списка друзей"
+      "\n"
+  };
+
+  // Default unspecified status
+  REMOVE_FRIEND_STATUS_UNSPECIFIED = 0;
+
+  // Removal is not allowed due to a block
+  REMOVE_FRIEND_STATUS_BLOCKED = 1;
+
+  // Friend was removed successfully
+  REMOVE_FRIEND_STATUS_SUCCESS = 2;
+
+  // The users are not friends
+  REMOVE_FRIEND_STATUS_NOT_FRIENDS = 3;
+
+  // The target user was not found
+  REMOVE_FRIEND_STATUS_USER_NOT_FOUND = 4;
+
+  // A user cannot remove themselves as a friend
+  REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED = 5;
+}

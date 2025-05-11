@@ -1,0 +1,475 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Friendship Service API",
+    "description": "API for managing friendship interactions between users, including sending, accepting, declining, and removing friend requests.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Friendship Service Team",
+      "url": "https://github.com/nazarovnick"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "tags": [
+    {
+      "name": "FriendshipService"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/friends/accept": {
+      "post": {
+        "summary": "AcceptFriend approves a pending friend request from another user",
+        "operationId": "FriendshipService_AcceptFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/friendshipAcceptFriendResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Запрос на принятие входящей заявки в друзья",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/friendshipAcceptFriendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FriendshipService"
+        ]
+      }
+    },
+    "/api/v1/friends/decline": {
+      "post": {
+        "summary": "DeclineFriend rejects a pending friend request from another user",
+        "operationId": "FriendshipService_DeclineFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/friendshipDeclineFriendResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Запрос на отклонение входящей заявки в друзья",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/friendshipDeclineFriendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FriendshipService"
+        ]
+      }
+    },
+    "/api/v1/friends/remove": {
+      "post": {
+        "summary": "RemoveFriend removes an existing friend from the user's friend list",
+        "operationId": "FriendshipService_RemoveFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/friendshipRemoveFriendResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Запрос на удаление пользователя из списка друзей",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/friendshipRemoveFriendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FriendshipService"
+        ]
+      }
+    },
+    "/api/v1/friends/request": {
+      "post": {
+        "summary": "RequestFriend sends a friend request from one user to another",
+        "operationId": "FriendshipService_RequestFriend",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/friendshipSendFriendResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Запрос на отправку заявки в друзья",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/friendshipSendFriendRequest"
+            }
+          }
+        ],
+        "tags": [
+          "FriendshipService"
+        ]
+      }
+    },
+    "/api/v1/friends/{user_uuid}": {
+      "get": {
+        "summary": "GetFriends returns a list of user IDs representing the user's friends",
+        "operationId": "FriendshipService_GetFriends",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/friendshipGetFriendsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user_uuid",
+            "description": "user_uuid is the UUID of the user whose friends are being requested",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FriendshipService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "friendshipAcceptFriendRequest": {
+      "type": "object",
+      "example": {
+        "user_uuid": "b72f8c58-67a3-4a8b-a4f5-c3de47812ab1",
+        "target_user_uuid": "8e39eaf7-34f6-4b0e-ae3d-b54c3db4ee64"
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "title": "user_uuid is the UUID of the user who accepts the incoming friend request"
+        },
+        "target_user_uuid": {
+          "type": "string",
+          "title": "target_user_uuid is the UUID of the user who originally\nsent the friend request"
+        }
+      },
+      "description": "Запрос на принятие входящей заявки в друзья",
+      "title": "AcceptFriendRequest",
+      "required": [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+    },
+    "friendshipAcceptFriendResponse": {
+      "type": "object",
+      "example": {
+        "status": "ACCEPT_FRIEND_STATUS_UNSPECIFIED"
+      },
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/friendshipAcceptFriendStatus",
+          "title": "status indicates the result of the friend request\nacceptance operation (enum)"
+        }
+      },
+      "description": "Ответ на попытку подтверждения заявки в друзья",
+      "title": "AcceptFriendResponse",
+      "required": [
+        "status"
+      ]
+    },
+    "friendshipAcceptFriendStatus": {
+      "type": "string",
+      "enum": [
+        "ACCEPT_FRIEND_STATUS_UNSPECIFIED",
+        "ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS",
+        "ACCEPT_FRIEND_STATUS_BLOCKED",
+        "ACCEPT_FRIEND_STATUS_SUCCESS",
+        "ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND",
+        "ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED",
+        "ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED"
+      ],
+      "default": "ACCEPT_FRIEND_STATUS_UNSPECIFIED",
+      "description": "EN:\nRepresents the result of accepting a friend request.\n\n1.) ACCEPT_FRIEND_STATUS_UNSPECIFIED: Default unspecified status\n2.) ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS: Users are already friends\n3.) ACCEPT_FRIEND_STATUS_BLOCKED: The request cannot be accepted due to a block\n4.) ACCEPT_FRIEND_STATUS_SUCCESS: Friend request was accepted successfully\n5.) ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND: Friend request was not found\n6.) ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED: Friend request was already accepted\n7.) ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED: A user cannot accept their own friend request\n\n\nRU:\nПредставляет собой результат принятия запроса в друзья.\n\n1.) ACCEPT_FRIEND_STATUS_UNSPECIFIED: Статус по умолчанию, не указан\n2.) ACCEPT_FRIEND_STATUS_ALREADY_FRIENDS: Пользователи уже являются друзьями\n3.) ACCEPT_FRIEND_STATUS_BLOCKED: Невозможно принять заявку из-за блокировки\n4.) ACCEPT_FRIEND_STATUS_SUCCESS: Заявка успешно принята\n5.) ACCEPT_FRIEND_STATUS_REQUEST_NOT_FOUND: Заявка не найдена\n6.) ACCEPT_FRIEND_STATUS_ALREADY_ACCEPTED: Заявка уже была принята ранее\n7.) ACCEPT_FRIEND_STATUS_SELF_ACCEPT_NOT_ALLOWED: Нельзя принять свою собственную заявку\n",
+      "title": "ENUM: AcceptFriendStatus"
+    },
+    "friendshipDeclineFriendRequest": {
+      "type": "object",
+      "example": {
+        "user_uuid": "56fc9f5e-0282-4a44-8a45-d3b479083e1a",
+        "target_user_uuid": "4e9e1df8-c158-420a-abc1-0123456789ab"
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "title": "user_uuid is the UUID of the user who is declining\nthe incoming friend request"
+        },
+        "target_user_uuid": {
+          "type": "string",
+          "title": "target_user_uuid is the UUID of the user who originally\nsent the friend request"
+        }
+      },
+      "description": "Запрос на отклонение входящей заявки в друзья",
+      "title": "DeclineFriendRequest",
+      "required": [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+    },
+    "friendshipDeclineFriendResponse": {
+      "type": "object",
+      "example": {
+        "status": "DECLINE_FRIEND_STATUS_UNSPECIFIED"
+      },
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/friendshipDeclineFriendStatus",
+          "title": "status indicates the result of the decline operation (enum)"
+        }
+      },
+      "description": "Ответ на отклонение заявки в друзья",
+      "title": "DeclineFriendResponse",
+      "required": [
+        "status"
+      ]
+    },
+    "friendshipDeclineFriendStatus": {
+      "type": "string",
+      "enum": [
+        "DECLINE_FRIEND_STATUS_UNSPECIFIED",
+        "DECLINE_FRIEND_STATUS_ALREADY_FRIENDS",
+        "DECLINE_FRIEND_STATUS_SUCCESS",
+        "DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND",
+        "DECLINE_FRIEND_STATUS_ALREADY_DECLINED",
+        "DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED"
+      ],
+      "default": "DECLINE_FRIEND_STATUS_UNSPECIFIED",
+      "description": "EN:\nRepresents the result of declining a friend request.\n\n1.) DECLINE_FRIEND_STATUS_UNSPECIFIED: Default unspecified status\n2.) DECLINE_FRIEND_STATUS_ALREADY_FRIENDS: Users are already friends\n3.) DECLINE_FRIEND_STATUS_SUCCESS: Friend request was declined successfully\n4.) DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND: Friend request was not found\n5.) DECLINE_FRIEND_STATUS_ALREADY_DECLINED: Friend request was already declined\n6.) DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED: A user cannot decline their own friend request\n\n\nRU:\nПредставляет собой результат отклонения запроса в друзья.\n\n1.) DECLINE_FRIEND_STATUS_UNSPECIFIED: Статус по умолчанию, не указан\n2.) DECLINE_FRIEND_STATUS_ALREADY_FRIENDS: Пользователи уже являются друзьями\n3.) DECLINE_FRIEND_STATUS_SUCCESS: Заявка успешно отклонена\n4.) DECLINE_FRIEND_STATUS_REQUEST_NOT_FOUND: Заявка не найдена\n5.) DECLINE_FRIEND_STATUS_ALREADY_DECLINED: Заявка уже была отклонена ранее\n6.) DECLINE_FRIEND_STATUS_SELF_DECLINE_NOT_ALLOWED: Нельзя отклонить свою собственную заявку\n",
+      "title": "ENUM: DeclineFriendStatus"
+    },
+    "friendshipFriendRequestStatus": {
+      "type": "string",
+      "enum": [
+        "FRIEND_REQUEST_STATUS_UNSPECIFIED",
+        "FRIEND_REQUEST_STATUS_ALREADY_FRIENDS",
+        "FRIEND_REQUEST_STATUS_BLOCKED",
+        "FRIEND_REQUEST_STATUS_SUCCESS",
+        "FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS",
+        "FRIEND_REQUEST_STATUS_USER_NOT_FOUND",
+        "FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED"
+      ],
+      "default": "FRIEND_REQUEST_STATUS_UNSPECIFIED",
+      "description": "EN:\nRepresents the result of sending a friend request.\n\n1.) FRIEND_REQUEST_STATUS_UNSPECIFIED: Default unspecified status\n2.) FRIEND_REQUEST_STATUS_ALREADY_FRIENDS: Users are already friends\n3.) FRIEND_REQUEST_STATUS_BLOCKED: The sender is blocked by the recipient\n4.) FRIEND_REQUEST_STATUS_SUCCESS: Request was successfully sent\n5.) FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS: Request already exists\n6.) FRIEND_REQUEST_STATUS_USER_NOT_FOUND: Target user not found\n7.) FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED: Cannot send request to self\n\n\nRU:\nПредставляет собой результат отправки запроса надобавление в друзья.\n\n1.) FRIEND_REQUEST_STATUS_UNSPECIFIED: Статус по умолчанию не указан\n2.) FRIEND_REQUEST_STATUS_ALREADY_FRIENDS: Пользователи уже друзья\n3.) FRIEND_REQUEST_STATUS_BLOCKED: Отправитель заблокирован получателем\n4.) FRIEND_REQUEST_STATUS_SUCCESS: Заявка успешно отправлена\n5.) FRIEND_REQUEST_STATUS_REQUEST_ALREADY_EXISTS: Заявка уже существует\n6.) FRIEND_REQUEST_STATUS_USER_NOT_FOUND: Целевой пользователь не найден\n7.) FRIEND_REQUEST_STATUS_SELF_REQUEST_NOT_ALLOWED: Нельзя отправить заявку самому себе\n",
+      "title": "ENUM: FriendRequestStatus"
+    },
+    "friendshipGetFriendsResponse": {
+      "type": "object",
+      "example": {
+        "friend_uuids": [
+          "1a2b3c4d-5678-1234-abcd-1234567890ab",
+          "9f8e7d6c-4321-5678-abcd-0987654321ff"
+        ]
+      },
+      "properties": {
+        "friend_uuids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "friend_ids is a list of UUIDs representing the user's friends"
+        }
+      },
+      "description": "Ответ, содержащий список UUID-друзей пользователя",
+      "title": "GetFriendsResponse"
+    },
+    "friendshipRemoveFriendRequest": {
+      "type": "object",
+      "example": {
+        "user_uuid": "2a1f6fce-5f92-4d2d-bf56-32f3a4b89129",
+        "target_user_uuid": "72d98fd2-3f9a-44e7-8d72-dff94391a1c1"
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "title": "user_uuid is the UUID of the user who initiates the removal"
+        },
+        "target_user_uuid": {
+          "type": "string",
+          "title": "target_user_uuid is the UUID of the friend being removed"
+        }
+      },
+      "description": "Запрос на удаление пользователя из списка друзей",
+      "title": "RemoveFriendRequest",
+      "required": [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+    },
+    "friendshipRemoveFriendResponse": {
+      "type": "object",
+      "example": {
+        "status": "REMOVE_FRIEND_STATUS_UNSPECIFIED"
+      },
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/friendshipRemoveFriendStatus",
+          "title": "status indicates the result of the removal operation (enum)"
+        }
+      },
+      "description": "Ответ на попытку удаления друга",
+      "title": "RemoveFriendResponse contains the result of removing a friend",
+      "required": [
+        "status"
+      ]
+    },
+    "friendshipRemoveFriendStatus": {
+      "type": "string",
+      "enum": [
+        "REMOVE_FRIEND_STATUS_UNSPECIFIED",
+        "REMOVE_FRIEND_STATUS_BLOCKED",
+        "REMOVE_FRIEND_STATUS_SUCCESS",
+        "REMOVE_FRIEND_STATUS_NOT_FRIENDS",
+        "REMOVE_FRIEND_STATUS_USER_NOT_FOUND",
+        "REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED"
+      ],
+      "default": "REMOVE_FRIEND_STATUS_UNSPECIFIED",
+      "description": "EN:\nRepresents the result of removing a friend.\n\n1.) REMOVE_FRIEND_STATUS_UNSPECIFIED: Default unspecified status\n2.) REMOVE_FRIEND_STATUS_BLOCKED: Removal is not allowed due to a block\n3.) REMOVE_FRIEND_STATUS_SUCCESS: Friend was removed successfully\n4.) REMOVE_FRIEND_STATUS_NOT_FRIENDS: The users are not friends\n5.) REMOVE_FRIEND_STATUS_USER_NOT_FOUND: The target user was not found\n6.) REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED: A user cannot remove themselves as a friend\n\n\nRU:\nПредставляет собой результат удаления пользователя из друзей.\n\n1.) REMOVE_FRIEND_STATUS_UNSPECIFIED: Статус по умолчанию, не указан\n2.) REMOVE_FRIEND_STATUS_BLOCKED: Удаление невозможно из-за блокировки\n3.) REMOVE_FRIEND_STATUS_SUCCESS: Друг был успешно удалён\n4.) REMOVE_FRIEND_STATUS_NOT_FRIENDS: Пользователи не являются друзьями\n5.) REMOVE_FRIEND_STATUS_USER_NOT_FOUND: Целевой пользователь не найден\n6.) REMOVE_FRIEND_STATUS_SELF_REMOVE_NOT_ALLOWED: Нельзя удалить самого себя из списка друзей\n",
+      "title": "ENUM: RemoveFriendStatus"
+    },
+    "friendshipSendFriendRequest": {
+      "type": "object",
+      "example": {
+        "user_uuid": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+        "target_user_uuid": "ba9f62de-2fa9-4ac3-87a2-123456789abc"
+      },
+      "properties": {
+        "user_uuid": {
+          "type": "string",
+          "description": "UUID пользователя, который отправляет запрос на добавление в друзья",
+          "title": "UUID отправителя"
+        },
+        "target_user_uuid": {
+          "type": "string",
+          "description": "UUID пользователя, которому отправляется запрос на добавление в друзья",
+          "title": "UUID получателя"
+        }
+      },
+      "description": "Запрос на отправку заявки в друзья",
+      "title": "SendFriendRequest",
+      "required": [
+        "user_uuid",
+        "target_user_uuid"
+      ]
+    },
+    "friendshipSendFriendResponse": {
+      "type": "object",
+      "example": {
+        "status": "FRIEND_REQUEST_STATUS_UNSPECIFIED"
+      },
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/friendshipFriendRequestStatus",
+          "title": "status indicates the result of the friend request operation (enum)"
+        }
+      },
+      "description": "Ответ на попытку отправки заявки в друзья",
+      "title": "SendFriendResponse",
+      "required": [
+        "status"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Full documentation and source code",
+    "url": "https://github.com/nazarovnick/chat-platform/services/friendship"
+  }
+}
