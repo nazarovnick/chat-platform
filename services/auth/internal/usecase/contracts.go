@@ -11,12 +11,18 @@ import (
 type UserRepo interface {
 	// GetByLogin returns a user by login or an error if not found.
 	GetByLogin(context.Context, user.Login) (*user.User, error)
+
+	// GetByID returns a user by UserID or an error if not found.
+	GetByID(context.Context, user.UserID) (*user.User, error)
 }
 
 // SessionRepo defines the interface for session data management.
 type SessionRepo interface {
 	// Create stores a new session in the repository.
 	Create(context.Context, *session.Session) error
+
+	// GetBySessionID returns a session by SessionID.
+	GetBySessionID(context.Context, session.SessionID) (*session.Session, error)
 
 	// GetByRefreshToken returns a session by its hashed refresh token.
 	GetByRefreshToken(context.Context, session.RefreshTokenHash) (*session.Session, error)
@@ -25,7 +31,7 @@ type SessionRepo interface {
 	Invalidate(context.Context, session.SessionID) error
 
 	// InvalidateAll invalidates all sessions for the given user.
-	InvalidateAll(ctx context.Context, id user.UserID) error
+	InvalidateAll(context.Context, user.UserID) error
 }
 
 // TokenService defines the interface for working with access and refresh tokens.
