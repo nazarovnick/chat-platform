@@ -1,8 +1,15 @@
 package user
 
+// PasswordHasher defines the contract for hashing a user's password.
+type PasswordHasher interface {
+	// Hash generates a secure hash from the given plain-text password.
+	Hash(Password) (PasswordHash, error)
+}
+
 // PasswordVerifier defines an interface for verifying a plain-text password
 // against a stored hash.
 type PasswordVerifier interface {
+	// Verify checks whether the inputPassword matches the stored hash.
 	Verify(storedHash string, inputPassword string) error
 }
 

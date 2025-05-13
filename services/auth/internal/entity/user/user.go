@@ -7,12 +7,12 @@ import (
 
 // User represents a system user with authentication data.
 type User struct {
-	id           UserID
-	login        Login
-	passwordHash PasswordHash
-	role         Role
-	isBlocked    bool
-	createdAt    time.Time
+	id           UserID       // Unique identifier for the user
+	login        Login        // Login name used for authentication
+	passwordHash PasswordHash // Hashed password
+	role         Role         // User's role (e.g., admin, user)
+	isBlocked    bool         // Indicates whether the user is blocked
+	createdAt    time.Time    // Timestamp when the user was created
 }
 
 // NewUser creates a new User instance with the given parameters.

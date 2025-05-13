@@ -71,3 +71,34 @@ type RevokeSessionInput struct {
 type RevokeSessionOutput struct {
 	Success bool // True if the session was revoked successfully.
 }
+
+// SessionInfo contains basic information about a user session.
+type SessionInfo struct {
+	SessionID session.SessionID // Unique ID of the session
+	UserAgent session.UserAgent // User agent string used during login
+	IP        session.IPAddress // IP address from which the session was created
+	CreatedAt time.Time         // Timestamp when the session was created
+	ExpiresAt time.Time         // Timestamp when the session will expire
+}
+
+// ListSessionsInput represents input data for listing a user's sessions.
+type ListSessionsInput struct {
+	UserID user.UserID // ID of the user whose sessions should be listed
+}
+
+// ListSessionsOutput contains a list of the user's active sessions.
+type ListSessionsOutput struct {
+	Sessions []*SessionInfo // Slice of session summaries
+}
+
+// RegisterInput contains the data required to create a new user account.
+type RegisterInput struct {
+	Login    string // Desired login name for the new user
+	Password string // Plaintext password to be hashed and stored
+	Role     string // Optional role to assign (default is used if empty)
+}
+
+// RegisterOutput contains the result of a successful user registration.
+type RegisterOutput struct {
+	UserID user.UserID // Unique ID assigned to the newly created user
+}

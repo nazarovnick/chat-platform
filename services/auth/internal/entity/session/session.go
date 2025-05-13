@@ -8,15 +8,15 @@ import (
 
 // Session represents a user session associated with a refresh token.
 type Session struct {
-	id               SessionID
-	userID           user.UserID
-	refreshTokenHash RefreshTokenHash
-	userAgent        UserAgent
-	ip               IPAddress
-	createdAt        time.Time
-	updatedAt        time.Time
-	expiresAt        time.Time
-	revoked          bool
+	id               SessionID        // Unique ID of the session
+	userID           user.UserID      // ID of the user who owns the session
+	refreshTokenHash RefreshTokenHash // Hash of the refresh token for this session
+	userAgent        UserAgent        // User agent string used during login
+	ip               IPAddress        // IP address of the user at session creation
+	createdAt        time.Time        // Timestamp when the session was created
+	updatedAt        time.Time        // Timestamp when the session was last updated
+	expiresAt        time.Time        // Timestamp when the session expires
+	revoked          bool             // Whether the session is revoked and should be ignored
 }
 
 // NewSession creates and returns a new Session instance.

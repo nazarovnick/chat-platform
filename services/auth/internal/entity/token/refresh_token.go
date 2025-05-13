@@ -26,10 +26,10 @@ func (t RefreshToken) GoString() string {
 
 // RefreshTokenClaims holds the payload data for a refresh token.
 type RefreshTokenClaims struct {
-	sessionID session.SessionID
-	userID    user.UserID
-	createdAt time.Time
-	expiresAt time.Time
+	sessionID session.SessionID // ID of the session associated with the token
+	userID    user.UserID       // ID of the user the token belongs to
+	createdAt time.Time         // Time when the token was created
+	expiresAt time.Time         // Time when the token will expire
 }
 
 // NewRefreshTokenClaims creates a new RefreshTokenClaims with the given session ID, user ID, and TTL.

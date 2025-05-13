@@ -14,6 +14,9 @@ type UserRepo interface {
 
 	// GetByID returns a user by UserID or an error if not found.
 	GetByID(context.Context, user.UserID) (*user.User, error)
+
+	// Create stores a new user in the storage system.
+	Create(context.Context, *user.User) error
 }
 
 // SessionRepo defines the interface for session data management.
@@ -50,4 +53,10 @@ type TokenService interface {
 
 	// HashRefreshToken returns a hashed version of the refresh token.
 	HashRefreshToken(token.RefreshToken) (session.RefreshTokenHash, error)
+}
+
+// SessionLister defines the interface for retrieving sessions belonging to a specific user.
+type SessionLister interface {
+	// ListByUser returns all sessions associated with the given user ID.
+	ListByUser(context.Context, user.UserID) ([]*session.Session, error)
 }

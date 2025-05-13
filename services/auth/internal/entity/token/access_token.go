@@ -25,10 +25,10 @@ func (t AccessToken) GoString() string {
 
 // AccessTokenClaims holds access token payload data.
 type AccessTokenClaims struct {
-	userID    user.UserID
-	role      user.Role
-	expiresAt time.Time
-	createdAt time.Time
+	userID    user.UserID // ID of the user the token belongs to
+	role      user.Role   // Role of the user for access control
+	expiresAt time.Time   // Expiration time of the access token
+	createdAt time.Time   // Time when the token was created
 }
 
 // NewAccessTokenClaims creates and validates a new access token claims object.

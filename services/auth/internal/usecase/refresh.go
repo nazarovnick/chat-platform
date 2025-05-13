@@ -75,16 +75,22 @@ func (uc *RefreshUseCase) createSession(ctx context.Context, userID user.UserID,
 // invalidating the old session, creating a new one, and issuing new tokens.
 //
 // Steps:
+//
 //  1. Hash the provided refresh token.
+//
 //  2. Find the session by the hashed token.
+//
 //  3. Invalidate the old session to prevent reuse.
+//
 //  4. Generate a new refresh token and its claims.
+//
 //  5. Create and store a new session using the new refresh token.
+//
 //  6. Retrieve the user by ID from the session.
+//
 //  7. Generate a new access token and its claims.
 //
-// Returns new access and refresh tokens with their expiration times,
-// or an error if any step fails.
+//     Returns new access and refresh tokens with their expiration times, or an error if any step fails.
 func (uc *RefreshUseCase) Execute(ctx context.Context, in *RefreshInput) (*RefreshOutput, error) {
 	// Step 1: Hash the provided refresh token.
 	hash, err := uc.tokens.HashRefreshToken(in.RefreshToken)

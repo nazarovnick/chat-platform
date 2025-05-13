@@ -75,11 +75,15 @@ func (uc *LoginUseCase) createSession(ctx context.Context, userID user.UserID, r
 // Execute authenticates the user and initializes a new session.
 //
 // Steps:
+//
 //  1. Verifies user credentials using the provided login and password.
+//
 //  2. Creates a refresh token and stores the session.
+//
 //  3. Generates an access token for authenticated API usage.
 //
-// Returns access and refresh tokens along with their expiration times.
+//     Returns access and refresh tokens along with their expiration times.
+//
 // Or returns an error if any step of the process fails.
 func (uc *LoginUseCase) Execute(ctx context.Context, in LoginInput) (*LoginOutput, error) {
 	// Step 1: Retrieve user by login and validate password.
