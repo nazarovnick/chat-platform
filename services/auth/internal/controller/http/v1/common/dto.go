@@ -1,4 +1,4 @@
-package dto
+package common
 
 // HTTPError represents the standard error response returned by the API.
 type HTTPError struct {

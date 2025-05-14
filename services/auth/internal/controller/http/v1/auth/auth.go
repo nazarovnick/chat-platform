@@ -1,8 +1,7 @@
-package v1
+package auth
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/v1/dto"
 )
 
 // RegisterAuthRoutes registers authentication-related routes for user operations.
@@ -27,7 +26,7 @@ func RegisterAuthRoutes(router fiber.Router) {
 //	@Failure		500		{object}	dto.HTTPError
 //	@Router			/auth/register [post]
 func RegisterHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(dto.RegisterResponse{
+	return c.Status(fiber.StatusOK).JSON(RegisterResponse{
 		ID:    "mock ID",
 		Email: "mock@email.com",
 	})
@@ -47,7 +46,7 @@ func RegisterHandler(c *fiber.Ctx) error {
 //	@Failure		500		{object}	dto.HTTPError
 //	@Router			/auth/login [post]
 func LoginHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(dto.LoginResponse{
+	return c.Status(fiber.StatusOK).JSON(LoginResponse{
 		AccessToken: "test_eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
 		ExpiresIn:   3600,
 	})
@@ -65,7 +64,7 @@ func LoginHandler(c *fiber.Ctx) error {
 //	@Failure		500		{object}	dto.HTTPError
 //	@Router			/auth/logout [post]
 func LogoutHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(dto.LogoutResponse{
+	return c.Status(fiber.StatusOK).JSON(LogoutResponse{
 		Message: "Logout successfully",
 	})
 }

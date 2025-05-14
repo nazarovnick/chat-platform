@@ -1,8 +1,7 @@
-package v1
+package health
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/v1/dto"
 )
 
 // RegisterHealthRoutes registers HTTP endpoints for Kubernetes liveness and readiness probes
@@ -25,7 +24,7 @@ func RegisterHealthRoutes(router fiber.Router) {
 // @Failure      500  {object}  dto.HTTPError
 // @Router       /healthz/liveness [get]
 func LivenessHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(dto.HealthResponse{
+	return c.Status(fiber.StatusOK).JSON(HealthResponse{
 		Status: "alive",
 	},
 	)
@@ -43,7 +42,7 @@ func LivenessHandler(c *fiber.Ctx) error {
 // @Failure      500  {object}  dto.HTTPError
 // @Router       /healthz/readiness [get]
 func ReadinessHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(dto.HealthResponse{
+	return c.Status(fiber.StatusOK).JSON(HealthResponse{
 		Status: "ready"},
 	)
 }

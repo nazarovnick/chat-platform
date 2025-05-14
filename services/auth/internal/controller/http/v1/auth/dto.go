@@ -1,4 +1,4 @@
-package dto
+package auth
 
 // RegisterRequest contains the necessary fields for user registration.
 type RegisterRequest struct {
