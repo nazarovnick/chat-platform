@@ -3,19 +3,20 @@ package usecase
 import (
 	"context"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
+	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
-// RegisterUseCase handles the logic for creating a new user account.
-type RegisterUseCase struct {
+// registerUseCase handles the logic for creating a new user account.
+type registerUseCase struct {
 	users       UserRepo
 	hasher      user.PasswordHasher
 	defaultRole user.Role
 }
 
-// RegisterUseCase handles the logic for creating a new user account.
-func NewRegisterUseCase(users UserRepo, hasher user.PasswordHasher, defaultRole user.Role) *RegisterUseCase {
-	return &RegisterUseCase{users: users, hasher: hasher, defaultRole: defaultRole}
+// registerUseCase handles the logic for creating a new user account.
+func NewRegisterUseCase(users UserRepo, hasher user.PasswordHasher, defaultRole user.Role) RegisterUseCase {
+	return &registerUseCase{users: users, hasher: hasher, defaultRole: defaultRole}
 }
 
 // Execute registers a new user account.
@@ -29,14 +30,21 @@ func NewRegisterUseCase(users UserRepo, hasher user.PasswordHasher, defaultRole 
 //  6. Create and store the user entity in the repository.
 //
 // Returns the new user's ID or an error if the registration fails.
-func (uc *RegisterUseCase) Execute(ctx context.Context, in *RegisterInput) (*RegisterOutput, error) {
+func (uc *registerUseCase) Execute(ctx context.Context, in *RegisterInput) (_ *RegisterOutput, err error) {
+	const op = "usecase.registerUseCase.Execute"
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(op, err)
+		}
+	}()
+
 	// Step 1. Create and validate login
 	login, err := user.NewLogin(in.Login)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidLogin
 	}
 	if err := login.Validate(); err != nil {
-		return nil, err
+		return nil, ErrInvalidLogin
 	}
 
 	// Step 2. Check if login is already taken
@@ -48,16 +56,16 @@ func (uc *RegisterUseCase) Execute(ctx context.Context, in *RegisterInput) (*Reg
 	// Step 3. Create and validate password
 	password, err := user.NewPassword(in.Password)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidPassword
 	}
 	if err := password.Validate(); err != nil {
-		return nil, err
+		return nil, ErrInvalidPassword
 	}
 
 	// Step 4. Hash the password
 	hashed, err := uc.hasher.Hash(password)
 	if err != nil {
-		return nil, err
+		return nil, ErrHashingPassword
 	}
 
 	// Step 5. Assign role
@@ -65,7 +73,7 @@ func (uc *RegisterUseCase) Execute(ctx context.Context, in *RegisterInput) (*Reg
 	if in.Role != "" {
 		role, err = user.NewRole(in.Role)
 		if err != nil {
-			return nil, err
+			return nil, ErrInvalidRole
 		}
 	} else {
 		role = uc.defaultRole
@@ -75,7 +83,7 @@ func (uc *RegisterUseCase) Execute(ctx context.Context, in *RegisterInput) (*Reg
 	id := user.NewUserID()
 	u := user.NewUser(id, login, hashed, role, false, time.Now())
 	if err := uc.users.Create(ctx, u); err != nil {
-		return nil, err
+		return nil, ErrUserCreationFailed
 	}
 
 	return &RegisterOutput{UserID: id}, nil

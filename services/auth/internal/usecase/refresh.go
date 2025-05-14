@@ -5,23 +5,24 @@ import (
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/token"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
+	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
-// RefreshUseCase handles logic for refreshing user tokens.
-type RefreshUseCase struct {
+// refreshUseCase handles logic for refreshing user tokens.
+type refreshUseCase struct {
 	users    UserRepo
 	sessions SessionRepo
 	tokens   TokenService
 }
 
-// NewRefreshUseCase creates a new instance of RefreshUseCase.
-func NewRefreshUseCase(sessions SessionRepo, tokens TokenService) *RefreshUseCase {
-	return &RefreshUseCase{sessions: sessions, tokens: tokens}
+// NewRefreshUseCase creates a new instance of refreshUseCase.
+func NewRefreshUseCase(sessions SessionRepo, tokens TokenService) RefreshUseCase {
+	return &refreshUseCase{sessions: sessions, tokens: tokens}
 }
 
 // generateRefreshTokenWithClaims creates a refresh token and its associated claims for the given user ID.
-func (uc *RefreshUseCase) generateRefreshTokenWithClaims(userID user.UserID) (token.RefreshToken, *token.RefreshTokenClaims, error) {
+func (uc *refreshUseCase) generateRefreshTokenWithClaims(userID user.UserID) (token.RefreshToken, *token.RefreshTokenClaims, error) {
 	rtClaims, err := uc.tokens.GenerateRefreshTokenClaims(userID)
 	if err != nil {
 		return "", nil, err
@@ -35,7 +36,7 @@ func (uc *RefreshUseCase) generateRefreshTokenWithClaims(userID user.UserID) (to
 }
 
 // generateAccessTokenWithClaims creates an access token and its claims for the specified user entity.
-func (uc *RefreshUseCase) generateAccessTokenWithClaims(u *user.User) (token.AccessToken, *token.AccessTokenClaims, error) {
+func (uc *refreshUseCase) generateAccessTokenWithClaims(u *user.User) (token.AccessToken, *token.AccessTokenClaims, error) {
 	atClaims, err := uc.tokens.GenerateAccessTokenClaims(u)
 	if err != nil {
 		return "", nil, err
@@ -50,7 +51,7 @@ func (uc *RefreshUseCase) generateAccessTokenWithClaims(u *user.User) (token.Acc
 
 // createSession creates and stores a new session using the provided input data
 // and hashed refresh token. Returns an error if validation or persistence fails.
-func (uc *RefreshUseCase) createSession(ctx context.Context, userID user.UserID, rt token.RefreshToken, in *RefreshInput) error {
+func (uc *refreshUseCase) createSession(ctx context.Context, userID user.UserID, rt token.RefreshToken, in *RefreshInput) error {
 	rtHash, err := uc.tokens.HashRefreshToken(rt)
 	if err != nil {
 		return err
@@ -91,45 +92,52 @@ func (uc *RefreshUseCase) createSession(ctx context.Context, userID user.UserID,
 //  7. Generate a new access token and its claims.
 //
 //     Returns new access and refresh tokens with their expiration times, or an error if any step fails.
-func (uc *RefreshUseCase) Execute(ctx context.Context, in *RefreshInput) (*RefreshOutput, error) {
+func (uc *refreshUseCase) Execute(ctx context.Context, in *RefreshInput) (_ *RefreshOutput, err error) {
+	const op = "usecase.refreshUseCase.Execute"
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(op, err)
+		}
+	}()
+
 	// Step 1: Hash the provided refresh token.
 	hash, err := uc.tokens.HashRefreshToken(in.RefreshToken)
 	if err != nil {
-		return nil, err
+		return nil, ErrHashingRefreshToken
 	}
 
 	// Step 2: Find the session by the hashed token.
 	sess, err := uc.sessions.GetByRefreshToken(ctx, hash)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidRefreshToken
 	}
 
 	// Step 3: Invalidate the old session to prevent reuse.
 	if err := uc.sessions.Invalidate(ctx, sess.ID()); err != nil {
-		return nil, err
+		return nil, ErrInvalidatingSession
 	}
 
 	// Step 4: Generate a new refresh token and its claims.
 	rt, rtClaims, err := uc.generateRefreshTokenWithClaims(sess.UserID())
 	if err != nil {
-		return nil, err
+		return nil, ErrGeneratingRefreshToken
 	}
 
 	// Step 5: Create and store a new session using the new refresh token.
 	if err := uc.createSession(ctx, sess.UserID(), rt, in); err != nil {
-		return nil, err
+		return nil, ErrCreatingSession
 	}
 
 	// Step 6: Retrieve the user by ID from the session.
 	u, err := uc.users.GetByID(ctx, sess.UserID())
 	if err != nil {
-		return nil, err
+		return nil, ErrUserNotFound
 	}
 
 	// Step 7: Generate a new access token and its claims.
 	at, atClaims, err := uc.generateAccessTokenWithClaims(u)
 	if err != nil {
-		return nil, err
+		return nil, ErrGeneratingAccessToken
 	}
 
 	return &RefreshOutput{

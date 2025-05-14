@@ -2,16 +2,17 @@ package usecase
 
 import (
 	"context"
+	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 )
 
-// ListSessionsUseCase handles listing all active sessions for a specific user.
-type ListSessionsUseCase struct {
+// listSessionsUseCase handles listing all active sessions for a specific user.
+type listSessionsUseCase struct {
 	sessions SessionLister
 }
 
-// NewListSessionUseCase creates a new instance of ListSessionsUseCase.
-func NewListSessionUseCase(sessions SessionLister) *ListSessionsUseCase {
-	return &ListSessionsUseCase{sessions: sessions}
+// NewListSessionUseCase creates a new instance of listSessionsUseCase.
+func NewListSessionUseCase(sessions SessionLister) ListSessionsUseCase {
+	return &listSessionsUseCase{sessions: sessions}
 }
 
 // Execute retrieves all sessions associated with the given user ID.
@@ -23,10 +24,17 @@ func NewListSessionUseCase(sessions SessionLister) *ListSessionsUseCase {
 //  2. Maps internal session entities to simplified session info objects.
 //
 //     Returns a list of sessions or an error if the operation fails.
-func (uc *ListSessionsUseCase) Execute(ctx context.Context, in *ListSessionsInput) (*ListSessionsOutput, error) {
+func (uc *listSessionsUseCase) Execute(ctx context.Context, in *ListSessionsInput) (_ *ListSessionsOutput, err error) {
+	const op = "usecase.listSessionsUseCase.Execute"
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(op, err)
+		}
+	}()
+
 	sessList, err := uc.sessions.ListByUser(ctx, in.UserID)
 	if err != nil {
-		return nil, err
+		return nil, ErrSessionListingFailed
 	}
 
 	out := make([]*SessionInfo, 0, len(sessList))

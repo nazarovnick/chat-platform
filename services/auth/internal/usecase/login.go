@@ -5,24 +5,25 @@ import (
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/token"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
+	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
-// LoginUseCase handles user authentication logic.
-type LoginUseCase struct {
+// loginUseCase handles user authentication logic.
+type loginUseCase struct {
 	users    UserRepo
 	sessions SessionRepo
 	tokens   TokenService
 	verifier user.PasswordVerifier
 }
 
-// NewLoginUseCase creates a new instance of LoginUseCase.
-func NewLoginUseCase(users UserRepo, sessions SessionRepo, tokens TokenService, verifier user.PasswordVerifier) *LoginUseCase {
-	return &LoginUseCase{users: users, sessions: sessions, tokens: tokens, verifier: verifier}
+// NewLoginUseCase creates a new instance of loginUseCase.
+func NewLoginUseCase(users UserRepo, sessions SessionRepo, tokens TokenService, verifier user.PasswordVerifier) LoginUseCase {
+	return &loginUseCase{users: users, sessions: sessions, tokens: tokens, verifier: verifier}
 }
 
 // generateRefreshTokenWithClaims creates a refresh token and its associated claims for the given user ID.
-func (uc *LoginUseCase) generateRefreshTokenWithClaims(userID user.UserID) (token.RefreshToken, *token.RefreshTokenClaims, error) {
+func (uc *loginUseCase) generateRefreshTokenWithClaims(userID user.UserID) (token.RefreshToken, *token.RefreshTokenClaims, error) {
 	rtClaims, err := uc.tokens.GenerateRefreshTokenClaims(userID)
 	if err != nil {
 		return "", nil, err
@@ -36,7 +37,7 @@ func (uc *LoginUseCase) generateRefreshTokenWithClaims(userID user.UserID) (toke
 }
 
 // generateAccessTokenWithClaims creates an access token and its claims for the specified user entity.
-func (uc *LoginUseCase) generateAccessTokenWithClaims(u *user.User) (token.AccessToken, *token.AccessTokenClaims, error) {
+func (uc *loginUseCase) generateAccessTokenWithClaims(u *user.User) (token.AccessToken, *token.AccessTokenClaims, error) {
 	atClaims, err := uc.tokens.GenerateAccessTokenClaims(u)
 	if err != nil {
 		return "", nil, err
@@ -51,7 +52,7 @@ func (uc *LoginUseCase) generateAccessTokenWithClaims(u *user.User) (token.Acces
 
 // createSession creates and stores a new session using the provided login input data
 // and hashed refresh token. Returns an error if validation or persistence fails.
-func (uc *LoginUseCase) createSession(ctx context.Context, userID user.UserID, rt token.RefreshToken, in *LoginInput) error {
+func (uc *loginUseCase) createSession(ctx context.Context, userID user.UserID, rt token.RefreshToken, in *LoginInput) error {
 	rtHash, err := uc.tokens.HashRefreshToken(rt)
 	if err != nil {
 		return err
@@ -85,29 +86,38 @@ func (uc *LoginUseCase) createSession(ctx context.Context, userID user.UserID, r
 //     Returns access and refresh tokens along with their expiration times.
 //
 // Or returns an error if any step of the process fails.
-func (uc *LoginUseCase) Execute(ctx context.Context, in LoginInput) (*LoginOutput, error) {
+func (uc *loginUseCase) Execute(ctx context.Context, in *LoginInput) (_ *LoginOutput, err error) {
+	const op = "usecase.loginUseCase.Execute"
+	defer func() {
+		if err != nil {
+			err = errors.Wrap(op, err)
+		}
+	}()
+
 	// Step 1: Retrieve user by login and validate password.
 	u, err := uc.users.GetByLogin(ctx, in.Login)
 	if err != nil {
-		return nil, err
+		// Don't expose if user was found (prevents login enumeration)
+		return nil, ErrInvalidCredentials
 	}
 	if err := u.CheckPassword(in.Password.Reveal(), uc.verifier); err != nil {
-		return nil, err
+		// Avoid hinting that password is invalid (prevents brute-force attacks)
+		return nil, ErrInvalidCredentials
 	}
 
 	// Step 2: Generate refresh token, associated claims, create and stores the session.
 	rt, rtClaims, err := uc.generateRefreshTokenWithClaims(u.ID())
 	if err != nil {
-		return nil, err
+		return nil, ErrGeneratingRefreshToken
 	}
-	if err := uc.createSession(ctx, u.ID(), rt, &in); err != nil {
-		return nil, err
+	if err := uc.createSession(ctx, u.ID(), rt, in); err != nil {
+		return nil, ErrCreatingSession
 	}
 
 	// Step 3: Generate access token for authenticated API usage and its claims.
 	at, atClaims, err := uc.generateAccessTokenWithClaims(u)
 	if err != nil {
-		return nil, err
+		return nil, ErrGeneratingAccessToken
 	}
 
 	// Return both tokens and their expiration timestamps.
