@@ -9,7 +9,8 @@ import (
 // NewRouter creates a new Fiber application, groups API routes under specified prefix (e.g. "/api"),
 // and registers each version’s routes (e.g., v1, v2, etc.).
 func NewRouter() *fiber.App {
-	app := fiber.New()
+	config := FiberConfig()
+	app := fiber.New(config)
 	app.Use(cors.New())
 	api := app.Group("/api")
 	v1.RegisterRoutes(api.Group("/v1"))

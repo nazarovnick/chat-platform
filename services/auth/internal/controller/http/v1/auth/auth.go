@@ -12,26 +12,6 @@ func RegisterAuthRoutes(router fiber.Router) {
 	auth.Get("/logout", LogoutHandler)
 }
 
-// RegisterHandler handles user registration requests.
-//
-//	@Summary		Register a new user
-//	@Description	Register a new user with email and password
-//	@Tags			auth
-//	@Accept			json
-//	@Produce		json
-//	@Param			request	body	dto.RegisterRequest	true	"User registration data"
-//	@Success		201		{object}	dto.RegisterResponse
-//	@Failure		400		{object}	dto.HTTPError
-//	@Failure		409		{object}	dto.HTTPError
-//	@Failure		500		{object}	dto.HTTPError
-//	@Router			/auth/register [post]
-func RegisterHandler(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(RegisterResponse{
-		ID:    "mock ID",
-		Email: "mock@email.com",
-	})
-}
-
 // LoginHandler handles user login requests.
 //
 //	@Summary		Login a user
