@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
+	pkgerrors "github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 )
 
 // logoutUseCase handles logging out from a single session (device).
@@ -36,14 +36,14 @@ func (uc *logoutUseCase) Execute(ctx context.Context, in *LogoutInput) (_ *Logou
 	const op = "usecase.logoutUseCase.Execute"
 	defer func() {
 		if err != nil {
-			err = errors.Wrap(op, err)
+			err = pkgerrors.Wrap(op, err)
 		}
 	}()
 
 	// Step 1: Find the session by ID
 	sess, err := uc.sessions.GetBySessionID(ctx, in.SessionID)
 	if err != nil {
-		return nil, ErrSessionNotFound
+		return nil, pkgerrors.WrapWith(ErrSessionNotFound, err)
 	}
 
 	// Step 2: Check that the session belongs to the requesting user
@@ -53,7 +53,7 @@ func (uc *logoutUseCase) Execute(ctx context.Context, in *LogoutInput) (_ *Logou
 
 	// Step 3: Invalidate the session
 	if err := uc.sessions.Invalidate(ctx, in.SessionID); err != nil {
-		return nil, ErrInvalidatingSession
+		return nil, pkgerrors.WrapWith(ErrInvalidatingSession, err)
 	}
 	return &LogoutOutput{Success: true}, nil
 }

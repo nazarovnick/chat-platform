@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"context"
-	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
+	pkgerrors "github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 )
 
 // listSessionsUseCase handles listing all active sessions for a specific user.
@@ -28,13 +28,13 @@ func (uc *listSessionsUseCase) Execute(ctx context.Context, in *ListSessionsInpu
 	const op = "usecase.listSessionsUseCase.Execute"
 	defer func() {
 		if err != nil {
-			err = errors.Wrap(op, err)
+			err = pkgerrors.Wrap(op, err)
 		}
 	}()
 
 	sessList, err := uc.sessions.ListByUser(ctx, in.UserID)
 	if err != nil {
-		return nil, ErrSessionListingFailed
+		return nil, pkgerrors.WrapWith(ErrSessionListingFailed, err)
 	}
 
 	out := make([]*SessionInfo, 0, len(sessList))

@@ -5,7 +5,7 @@ import (
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/token"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
-	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
+	pkgerrors "github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
@@ -96,48 +96,48 @@ func (uc *refreshUseCase) Execute(ctx context.Context, in *RefreshInput) (_ *Ref
 	const op = "usecase.refreshUseCase.Execute"
 	defer func() {
 		if err != nil {
-			err = errors.Wrap(op, err)
+			err = pkgerrors.Wrap(op, err)
 		}
 	}()
 
 	// Step 1: Hash the provided refresh token.
 	hash, err := uc.tokens.HashRefreshToken(in.RefreshToken)
 	if err != nil {
-		return nil, ErrHashingRefreshToken
+		return nil, pkgerrors.WrapWith(ErrHashingRefreshToken, err)
 	}
 
 	// Step 2: Find the session by the hashed token.
 	sess, err := uc.sessions.GetByRefreshToken(ctx, hash)
 	if err != nil {
-		return nil, ErrInvalidRefreshToken
+		return nil, pkgerrors.WrapWith(ErrInvalidRefreshToken, err)
 	}
 
 	// Step 3: Invalidate the old session to prevent reuse.
 	if err := uc.sessions.Invalidate(ctx, sess.ID()); err != nil {
-		return nil, ErrInvalidatingSession
+		return nil, pkgerrors.WrapWith(ErrInvalidatingSession, err)
 	}
 
 	// Step 4: Generate a new refresh token and its claims.
 	rt, rtClaims, err := uc.generateRefreshTokenWithClaims(sess.UserID())
 	if err != nil {
-		return nil, ErrGeneratingRefreshToken
+		return nil, pkgerrors.WrapWith(ErrGeneratingRefreshToken, err)
 	}
 
 	// Step 5: Create and store a new session using the new refresh token.
 	if err := uc.createSession(ctx, sess.UserID(), rt, in); err != nil {
-		return nil, ErrCreatingSession
+		return nil, pkgerrors.WrapWith(ErrCreatingSession, err)
 	}
 
 	// Step 6: Retrieve the user by ID from the session.
 	u, err := uc.users.GetByID(ctx, sess.UserID())
 	if err != nil {
-		return nil, ErrUserNotFound
+		return nil, pkgerrors.WrapWith(ErrUserNotFound, err)
 	}
 
 	// Step 7: Generate a new access token and its claims.
 	at, atClaims, err := uc.generateAccessTokenWithClaims(u)
 	if err != nil {
-		return nil, ErrGeneratingAccessToken
+		return nil, pkgerrors.WrapWith(ErrGeneratingAccessToken, err)
 	}
 
 	return &RefreshOutput{

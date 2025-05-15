@@ -71,14 +71,9 @@ type (
 		Execute(context.Context, *RegisterInput) (*RegisterOutput, error)
 	}
 
-	// RefreshUseCase issues new tokens using a refresh token.
-	RefreshUseCase interface {
-		Execute(context.Context, *RefreshInput) (*RefreshOutput, error)
-	}
-
-	// LogoutAllUseCase invalidates all sessions for a user.
-	LogoutAllUseCase interface {
-		Execute(context.Context, *LogoutAllInput) (*LogoutAllOutput, error)
+	// LoginUseCase authenticates a user and creates a new session.
+	LoginUseCase interface {
+		Execute(context.Context, *LoginInput) (*LoginOutput, error)
 	}
 
 	// LogoutUseCase invalidates a single session by ID.
@@ -86,9 +81,14 @@ type (
 		Execute(context.Context, *LogoutInput) (*LogoutOutput, error)
 	}
 
-	// LoginUseCase authenticates a user and creates a new session.
-	LoginUseCase interface {
-		Execute(context.Context, *LoginInput) (*LoginOutput, error)
+	// LogoutAllUseCase invalidates all sessions for a user.
+	LogoutAllUseCase interface {
+		Execute(context.Context, *LogoutAllInput) (*LogoutAllOutput, error)
+	}
+
+	// RefreshUseCase issues new tokens using a refresh token.
+	RefreshUseCase interface {
+		Execute(context.Context, *RefreshInput) (*RefreshOutput, error)
 	}
 
 	// ListSessionsUseCase returns all active sessions for a user.

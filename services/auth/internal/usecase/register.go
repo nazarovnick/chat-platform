@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
-	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
+	pkgerrors "github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
@@ -34,38 +34,38 @@ func (uc *registerUseCase) Execute(ctx context.Context, in *RegisterInput) (_ *R
 	const op = "usecase.registerUseCase.Execute"
 	defer func() {
 		if err != nil {
-			err = errors.Wrap(op, err)
+			err = pkgerrors.Wrap(op, err)
 		}
 	}()
 
 	// Step 1. Create and validate login
 	login, err := user.NewLogin(in.Login)
 	if err != nil {
-		return nil, ErrInvalidLogin
+		return nil, pkgerrors.WrapWith(ErrInvalidLogin, err)
 	}
 	if err := login.Validate(); err != nil {
-		return nil, ErrInvalidLogin
+		return nil, pkgerrors.WrapWith(ErrInvalidLogin, err)
 	}
 
 	// Step 2. Check if login is already taken
 	_, err = uc.users.GetByLogin(ctx, login)
 	if err == nil {
-		return nil, ErrLoginAlreadyExists
+		return nil, pkgerrors.WrapWith(ErrLoginAlreadyExists, err)
 	}
 
 	// Step 3. Create and validate password
 	password, err := user.NewPassword(in.Password)
 	if err != nil {
-		return nil, ErrInvalidPassword
+		return nil, pkgerrors.WrapWith(ErrInvalidPassword, err)
 	}
 	if err := password.Validate(); err != nil {
-		return nil, ErrInvalidPassword
+		return nil, pkgerrors.WrapWith(ErrInvalidPassword, err)
 	}
 
 	// Step 4. Hash the password
 	hashed, err := uc.hasher.Hash(password)
 	if err != nil {
-		return nil, ErrHashingPassword
+		return nil, pkgerrors.WrapWith(ErrHashingPassword, err)
 	}
 
 	// Step 5. Assign role
@@ -73,7 +73,7 @@ func (uc *registerUseCase) Execute(ctx context.Context, in *RegisterInput) (_ *R
 	if in.Role != "" {
 		role, err = user.NewRole(in.Role)
 		if err != nil {
-			return nil, ErrInvalidRole
+			return nil, pkgerrors.WrapWith(ErrInvalidRole, err)
 		}
 	} else {
 		role = uc.defaultRole
@@ -83,7 +83,7 @@ func (uc *registerUseCase) Execute(ctx context.Context, in *RegisterInput) (_ *R
 	id := user.NewUserID()
 	u := user.NewUser(id, login, hashed, role, false, time.Now())
 	if err := uc.users.Create(ctx, u); err != nil {
-		return nil, ErrUserCreationFailed
+		return nil, pkgerrors.WrapWith(ErrUserCreationFailed, err)
 	}
 
 	return &RegisterOutput{UserID: id}, nil

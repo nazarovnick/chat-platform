@@ -5,7 +5,7 @@ import (
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/token"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
-	"github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
+	pkgerrors "github.com/nazarovnick/chat-platform/services/auth/pkg/errors"
 	"time"
 )
 
@@ -90,34 +90,32 @@ func (uc *loginUseCase) Execute(ctx context.Context, in *LoginInput) (_ *LoginOu
 	const op = "usecase.loginUseCase.Execute"
 	defer func() {
 		if err != nil {
-			err = errors.Wrap(op, err)
+			err = pkgerrors.Wrap(op, err)
 		}
 	}()
 
 	// Step 1: Retrieve user by login and validate password.
 	u, err := uc.users.GetByLogin(ctx, in.Login)
 	if err != nil {
-		// Don't expose if user was found (prevents login enumeration)
-		return nil, ErrInvalidCredentials
+		return nil, pkgerrors.WrapWith(ErrInvalidCredentials, err)
 	}
 	if err := u.CheckPassword(in.Password.Reveal(), uc.verifier); err != nil {
-		// Avoid hinting that password is invalid (prevents brute-force attacks)
-		return nil, ErrInvalidCredentials
+		return nil, pkgerrors.WrapWith(ErrInvalidCredentials, err)
 	}
 
 	// Step 2: Generate refresh token, associated claims, create and stores the session.
 	rt, rtClaims, err := uc.generateRefreshTokenWithClaims(u.ID())
 	if err != nil {
-		return nil, ErrGeneratingRefreshToken
+		return nil, pkgerrors.WrapWith(ErrGeneratingRefreshToken, err)
 	}
 	if err := uc.createSession(ctx, u.ID(), rt, in); err != nil {
-		return nil, ErrCreatingSession
+		return nil, pkgerrors.WrapWith(ErrCreatingSession, err)
 	}
 
 	// Step 3: Generate access token for authenticated API usage and its claims.
 	at, atClaims, err := uc.generateAccessTokenWithClaims(u)
 	if err != nil {
-		return nil, ErrGeneratingAccessToken
+		return nil, pkgerrors.WrapWith(ErrGeneratingAccessToken, err)
 	}
 
 	// Return both tokens and their expiration timestamps.

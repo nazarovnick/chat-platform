@@ -7,7 +7,7 @@ var (
 	ErrLoginAlreadyExists = errors.New("login already exists")
 	ErrAccessDenied       = errors.New("access denied, forbidden")
 	ErrInvalidLogin       = errors.New("invalid login format")
-	ErrInvalidPassword    = errors.New("invalid password format")
+	ErrInvalidPassword    = errors.New("invalid password format (must be at least 8 characters long and include a letter, an uppercase letter, a digit, and a special character (e.g. @,!,#, etc.))")
 	ErrInvalidRole        = errors.New("invalid role")
 	ErrHashingPassword    = errors.New("failed to hash password")
 	ErrUserCreationFailed = errors.New("failed to create user")
@@ -21,6 +21,7 @@ var (
 	// Session errors
 	ErrSessionNotFound         = errors.New("session not found for provided refresh token")
 	ErrInvalidatingSession     = errors.New("failed to invalidate previous session")
+	ErrInvalidatingAllSessions = errors.New("failed to invalidate all sessions")
 	ErrCreatingSession         = errors.New("failed to create new session")
 	ErrSessionListingFailed    = errors.New("failed to list sessions")
 	ErrSessionInvalidateFailed = errors.New("failed to invalidate session")

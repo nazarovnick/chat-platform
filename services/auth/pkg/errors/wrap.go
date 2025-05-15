@@ -12,3 +12,10 @@ func Wrap(msg string, err error) error {
 
 	return fmt.Errorf("%s: %w", msg, err)
 }
+
+func WrapWith(marker, cause error) error {
+	if cause == nil {
+		return marker
+	}
+	return fmt.Errorf("%w: %v", marker, cause)
+}
