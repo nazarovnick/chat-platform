@@ -1,6 +1,9 @@
 package session
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"strings"
+)
 
 // SessionID uniquely identifies a session.
 type SessionID uuid.UUID
@@ -25,4 +28,19 @@ func (id SessionID) Validate() error {
 // String returns the string representation of the SessionID.
 func (id SessionID) String() string {
 	return uuid.UUID(id).String()
+}
+
+// ParseSessionID parses and validates a session ID from string.
+func ParseSessionID(v string) (SessionID, error) {
+	v = strings.TrimSpace(v)
+	if v == "" {
+		return SessionID{}, ErrEmptySessionID
+	}
+
+	id, err := uuid.Parse(v)
+	if err != nil {
+		return SessionID{}, ErrInvalidSessionID
+	}
+
+	return SessionID(id), nil
 }

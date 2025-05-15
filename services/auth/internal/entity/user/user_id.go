@@ -1,6 +1,9 @@
 package user
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"strings"
+)
 
 // UserID represents a unique identifier for a user.
 type UserID uuid.UUID
@@ -25,4 +28,19 @@ func (id UserID) Validate() error {
 // String returns the string representation of the UserID.
 func (id UserID) String() string {
 	return uuid.UUID(id).String()
+}
+
+// ParseUserID parses and validates a user ID from string.
+func ParseUserID(v string) (UserID, error) {
+	v = strings.TrimSpace(v)
+	if v == "" {
+		return UserID{}, ErrEmptyUserID
+	}
+
+	id, err := uuid.Parse(v)
+	if err != nil {
+		return UserID{}, ErrInvalidUserID
+	}
+
+	return UserID(id), nil
 }

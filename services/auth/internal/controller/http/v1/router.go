@@ -12,5 +12,5 @@ import (
 func RegisterRoutes(router fiber.Router) {
 	swagger.RegisterSwaggerRoutes(router)
 	health.RegisterHealthRoutes(router)
-	auth.RegisterAuthRoutes(router)
+	auth.RegisterAuthRoutes(router, auth.NewAuthUseCases())
 }
