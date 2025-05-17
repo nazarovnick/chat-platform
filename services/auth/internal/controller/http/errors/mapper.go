@@ -8,8 +8,11 @@ import (
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
 )
 
+// ErrorMapper maps domain and usecase errors to corresponding *fiber.Error responses.
 type ErrorMapper map[error]*fiber.Error
 
+// NewErrorMapper returns a new ErrorMapper with predefined mappings
+// from domain and usecase errors to HTTP-specific *fiber.Error values.
 func NewErrorMapper() ErrorMapper {
 	m := ErrorMapper{
 		// Session entity errors mapping
@@ -55,6 +58,8 @@ func NewErrorMapper() ErrorMapper {
 	return m
 }
 
+// Resolve returns the corresponding *fiber.Error for a given error.
+// If no match is found, fiber.ErrInternalServerError is returned.
 func (m ErrorMapper) Resolve(err error) *fiber.Error {
 	for target, mapped := range m {
 		if errors.Is(err, target) {
