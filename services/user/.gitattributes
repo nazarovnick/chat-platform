@@ -2,3 +2,5 @@
 *.pb.gw.go linguist-generated
 *.pb.grpc.go linguist-generated
 *.swagger.json linguist-generated
+*.swagger.json linguist-generated
+*_mock.go linguist-generated
