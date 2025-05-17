@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/errors"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
@@ -25,29 +25,29 @@ func LoginHandler(uc usecase.LoginUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req LoginRequest
 		if err := c.BodyParser(&req); err != nil {
-			return ErrBadRequestBody
+			return errors.ErrBadRequestBody
 		}
 
 		ip := c.IP()
 		ipAddr, err := session.NewIPAddress(ip)
 		if err != nil {
-			return ErrInvalidIPAddress
+			return err
 		}
 
 		ua := c.Get("User-Agent")
 		userAgent, err := session.NewUserAgent(ua)
 		if err != nil {
-			return ErrInvalidUserAgent
+			return err
 		}
 
 		login, err := user.NewLogin(req.Login)
 		if err != nil {
-			return ErrInvalidLogin
+			return err
 		}
 
 		password, err := user.NewPassword(req.Password)
 		if err != nil {
-			return ErrInvalidPassword
+			return err
 		}
 
 		input := &usecase.LoginInput{
@@ -59,10 +59,7 @@ func LoginHandler(uc usecase.LoginUseCase) fiber.Handler {
 
 		output, err := uc.Execute(c.Context(), input)
 		if err != nil {
-			if errors.Is(err, usecase.ErrInvalidCredentials) {
-				return ErrInvalidCredentials
-			}
-			return ErrLogInFailed
+			return err
 		}
 
 		resp := LoginResponse{

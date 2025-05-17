@@ -1,4 +1,4 @@
-package auth
+package errors
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +15,6 @@ var (
 	ErrFailedToInvalidateSession = fiber.NewError(fiber.StatusInternalServerError, "Failed to invalidate session")
 	ErrInvalidIPAddress          = fiber.NewError(fiber.StatusBadRequest, "Invalid IP address")
 	ErrInvalidUserAgent          = fiber.NewError(fiber.StatusBadRequest, "Invalid User-Agent")
-	ErrInvalidRefreshToken       = fiber.NewError(fiber.StatusUnauthorized, "Invalid or expired refresh token")
 	ErrLoginAlreadyExists        = fiber.NewError(fiber.StatusConflict, "Login already exists")
 	ErrInvalidRegistrationData   = fiber.NewError(fiber.StatusBadRequest, "Invalid registration data")
 	ErrRegisterUserFailed        = fiber.NewError(fiber.StatusInternalServerError, "Failed to register user")

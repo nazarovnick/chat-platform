@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/errors"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
@@ -26,23 +26,17 @@ func RevokeSessionHandler(uc usecase.RevokeSessionUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req RevokeSessionRequest
 		if err := c.BodyParser(&req); err != nil {
-			return ErrBadRequestBody
+			return errors.ErrBadRequestBody
 		}
 
 		sessionID, err := session.ParseSessionID(req.SessionID)
 		if err != nil {
-			if errors.Is(err, session.ErrEmptySessionID) {
-				return ErrEmptySessionID
-			}
-			return ErrInvalidSessionIDFormat
+			return err
 		}
 
 		userID, err := user.ParseUserID(req.UserID)
 		if err != nil {
-			if errors.Is(err, user.ErrEmptyUserID) {
-				return ErrEmptyUserID
-			}
-			return ErrInvalidUserID
+			return err
 		}
 
 		input := &usecase.RevokeSessionInput{
@@ -52,15 +46,7 @@ func RevokeSessionHandler(uc usecase.RevokeSessionUseCase) fiber.Handler {
 
 		output, err := uc.Execute(c.Context(), input)
 		if err != nil {
-			if errors.Is(err, usecase.ErrSessionNotFound) {
-				return ErrSessionNotFound
-			}
-			if errors.Is(err, usecase.ErrAccessDenied) {
-				return ErrAccessDenied
-			}
-			if errors.Is(err, usecase.ErrInvalidatingSession) {
-				return ErrFailedToInvalidateSession
-			}
+			return err
 		}
 		resp := &RevokeSessionResponse{Success: output.Success}
 		return c.Status(fiber.StatusOK).JSON(resp)

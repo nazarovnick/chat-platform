@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/errors"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/session"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
 )
@@ -23,19 +24,19 @@ func RefreshHandler(uc usecase.RefreshUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req RefreshRequest
 		if err := c.BodyParser(&req); err != nil {
-			return ErrBadRequestBody
+			return errors.ErrBadRequestBody
 		}
 
 		ip := c.IP()
 		ipAddr, err := session.NewIPAddress(ip)
 		if err != nil {
-			return ErrInvalidIPAddress
+			return err
 		}
 
 		ua := c.Get("User-Agent")
 		userAgent, err := session.NewUserAgent(ua)
 		if err != nil {
-			return ErrInvalidUserAgent
+			return err
 		}
 
 		input := &usecase.RefreshInput{
@@ -46,7 +47,7 @@ func RefreshHandler(uc usecase.RefreshUseCase) fiber.Handler {
 
 		output, err := uc.Execute(c.Context(), input)
 		if err != nil {
-			return ErrInvalidRefreshToken
+			return err
 		}
 
 		resp := RefreshResponse{

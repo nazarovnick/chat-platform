@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/errors"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/entity/user"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
 )
@@ -23,22 +23,19 @@ func ListSessionsHandler(uc usecase.ListSessionsUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req ListSessionsRequest
 		if err := c.BodyParser(&req); err != nil {
-			return ErrBadRequestBody
+			return errors.ErrBadRequestBody
 		}
 
 		userID, err := user.ParseUserID(req.UserID)
 		if err != nil {
-			if errors.Is(err, user.ErrEmptyUserID) {
-				return ErrEmptyUserID
-			}
-			return ErrInvalidUserID
+			return err
 		}
 
 		input := &usecase.ListSessionsInput{UserID: userID}
 
 		output, err := uc.Execute(c.Context(), input)
 		if err != nil {
-			return ErrFailedToListSessions
+			return err
 		}
 
 		resp := &ListSessionsResponse{Sessions: MapSessionList(output.Sessions)}

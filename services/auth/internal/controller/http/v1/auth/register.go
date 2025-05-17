@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"errors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/nazarovnick/chat-platform/services/auth/internal/controller/http/errors"
 	"github.com/nazarovnick/chat-platform/services/auth/internal/usecase"
 )
 
@@ -23,7 +23,7 @@ func RegisterHandler(uc usecase.RegisterUseCase) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req RegisterRequest
 		if err := c.BodyParser(&req); err != nil {
-			return ErrInvalidRegistrationData
+			return errors.ErrInvalidRegistrationData
 		}
 
 		input := &usecase.RegisterInput{
@@ -33,19 +33,7 @@ func RegisterHandler(uc usecase.RegisterUseCase) fiber.Handler {
 		}
 		output, err := uc.Execute(c.Context(), input)
 		if err != nil {
-			if errors.Is(err, usecase.ErrLoginAlreadyExists) {
-				return ErrLoginAlreadyExists
-			}
-			if errors.Is(err, usecase.ErrInvalidLogin) {
-				return ErrInvalidLogin
-			}
-			if errors.Is(err, usecase.ErrInvalidPassword) {
-				return ErrInvalidPassword
-			}
-			if errors.Is(err, usecase.ErrInvalidRole) {
-				return ErrInvalidRole
-			}
-			return ErrRegisterUserFailed
+			return err
 		}
 
 		resp := RegisterResponse{
